@@ -1,27 +1,46 @@
+// import { NextResponse } from 'next/server';
+// import { dbConnect } from '@/app/lib/config/db';
+// import Ship from '@/app/lib/models/ShipModel';
+
+// Fetch a single ship by ID (GET)
 import { NextResponse } from 'next/server';
 import { dbConnect } from '@/app/lib/config/db';
 import Ship from '@/app/lib/models/ShipModel';
+import mongoose from 'mongoose';
 
-// Fetch a single ship by ID (GET)
-export async function GET(req, { params }) {
+export async function GET(req, context) {
   await dbConnect();
 
-  const { id } = params;
+  const { params } = context;
+  const id = params.id;
 
-  if (id.length === 24) { // Check if it's a valid MongoDB ObjectId
-    try {
-      const ship = await Ship.findById(id);
-      if (!ship) {
-        return NextResponse.json({ message: "Ship not found" }, { status: 404 });
-      }
-      return NextResponse.json({ success: true, data: { result: ship } });
-    } catch (error) {
-      return NextResponse.json({ message: "Invalid Ship ID" }, { status: 400 });
-    }
-  } else {
+  if (!mongoose.Types.ObjectId.isValid(id)) {
     return NextResponse.json({ message: "Invalid Ship ID" }, { status: 400 });
   }
+
+  try {
+    const ship = await Ship.findById(id).lean();
+
+    if (!ship) {
+      return NextResponse.json({ message: "Ship not found" }, { status: 404 });
+    }
+
+    return NextResponse.json({
+      success: true,
+      data: {
+        result: ship,
+      },
+    });
+  } catch (error) {
+    console.error("Error fetching ship:", error);
+    return NextResponse.json(
+      { message: "Error fetching ship", error: error.message },
+      { status: 500 }
+    );
+  }
 }
+
+
 
 // Update a ship by ID (PUT)
 export async function PUT(req, { params }) {

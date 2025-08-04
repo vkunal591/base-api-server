@@ -157,9 +157,8 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
         fields.map((field: FormField) => (
           <div
             key={field.name}
-            className={`flex flex-col ${field?.widthFull && "col-span-3"} ${
-              field?.type === "textarea" && "col-span-2"
-            } ${field?.type === "password" && "col-span-2"}`}
+            className={`flex flex-col ${field?.widthFull && "col-span-3"} ${field?.type === "textarea" && "col-span-2"
+              } ${field?.type === "password" && "col-span-2"}`}
           >
             {field.type === "br" && (
               <h2 className="text-lg my-3 py-1 bg-secondary text-white font-bold text-center">
@@ -337,57 +336,60 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
               <div className="space-y-4">
                 <h2 className="text-lg font-bold">{field.label}</h2>
                 {(formData[field.name] || []).map(
-                  (item: any, index: number) => (
-                    <div
-                      key={index}
-                      className="grid grid-cols-3 gap-4 border p-4 rounded-md"
-                    >
-                      {field.fields?.map((subField: any) => (
-                        <div key={subField.name} className="flex flex-col">
-                          {subField.type === "text" && (
-                            <Text
-                              field={{
-                                ...subField,
-                                value: item[subField.name] || "",
-                              }}
-                              handleInputChange={(e) =>
-                                handleInputChange(e, index, field.name)
-                              }
-                            />
-                          )}
-                          {subField.type === "number" && (
-                            <Number
-                              field={{
-                                ...subField,
-                                value: item[subField.name] || "",
-                              }}
-                              handleInputChange={(e) =>
-                                handleInputChange(e, index, field.name)
-                              }
-                            />
-                          )}
-                          {subField.type === "date" && (
-                            <Date
-                              field={{
-                                ...subField,
-                                value: item[subField?.name] || "",
-                              }}
-                              handleInputChange={(e) =>
-                                handleInputChange(e, index, field.name)
-                              }
-                            />
-                          )}
-                        </div>
-                      ))}
-                      <button
-                        type="button"
-                        onClick={() => handleRemoveGroupItem(field.name, index)}
-                        className="bg-red-500 text-white px-3 py-1 rounded"
+                  (item: any, index: number) => {
+                    console.log(item)
+                    return (
+                      <div
+                        key={index}
+                        className="grid grid-cols-3 gap-4 border p-4 rounded-md"
                       >
-                        Delete
-                      </button>
-                    </div>
-                  )
+                        {field.fields?.map((subField: any) => (
+                          <div key={subField.name} className="flex flex-col">
+                            {subField.type === "text" && (
+                              <Text
+                                field={{
+                                  ...subField,
+                                  value: item[subField.name] || "",
+                                }}
+                                handleInputChange={(e) =>
+                                  handleInputChange(e, index, field.name)
+                                }
+                              />
+                            )}
+                            {subField.type === "number" && (
+                              <Number
+                                field={{
+                                  ...subField,
+                                  value: item[subField.name] || "",
+                                }}
+                                handleInputChange={(e) =>
+                                  handleInputChange(e, index, field.name)
+                                }
+                              />
+                            )}
+                            {subField.type === "date" && (
+                              <Date
+                                field={{
+                                  ...subField,
+                                  value: item[subField?.name] || "",
+                                }}
+                                handleInputChange={(e) =>
+                                  handleInputChange(e, index, field.name)
+                                }
+                              />
+                            )}
+                          </div>
+                        ))}
+                        <button
+                          type="button"
+                          onClick={() => handleRemoveGroupItem(field.name, index)}
+                          className="bg-red-500 text-white px-3 py-1 rounded"
+                        >
+                          Delete
+                        </button>
+                      </div>
+                    )
+                  }
                 )}
                 <button
                   type="button"

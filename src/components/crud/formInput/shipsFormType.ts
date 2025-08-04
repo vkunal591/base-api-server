@@ -160,31 +160,30 @@ export const ShipType: FormField[] = [
     widthFull: true,
     fields: [
       {
-        name: "vendorDetails.vendorInvoiceToSUD",
+        name: "vendorInvoiceToSUD",
         type: "text",
-
-        label: "Vendor Invoice To SUD Amount",
+        label: "Vendor Invoice To SUD",
         placeholder: "Enter vendor invoice to SUD",
       },
       {
-        name: "vendorDetails.vendorActualPaymentDate",
+        name: "vendorActualPaymentDate",
         type: "date",
 
         label: "Vendor Actual Payment Date",
         placeholder: "Select vendor actual payment date",
       },
       {
-        name: "vendorDetails.vendorPaymentDueDate",
-        type: "date",
+        name: "vendorPaymentDueDate",
+        type: "text",
 
-        label: "Vendor Payment Due Date",
+        label: "Vendor Name",
         placeholder: "Select vendor payment due date",
       },
     ],
   },
   {
     name: "remarks",
-    type: "text",
+    type: "textarea",
     label: "Remarks",
     placeholder: "Enter remarks",
     widthFull: true,

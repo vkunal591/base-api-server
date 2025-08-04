@@ -26,6 +26,7 @@ const shipDetailsSchema = new mongoose.Schema(
         vendorInvoiceToSUD: { type: String },
         vendorActualPaymentDate: { type: String },
         vendorPaymentDueDate: { type: String },
+        _id: false, // Optional: if you don't want auto _id for each subdoc
       },
     ],
     street: { type: String },

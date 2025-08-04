@@ -86,53 +86,47 @@ export async function GET(req) {
 export async function POST(req) {
   await dbConnect();
 
-  // Parse request body
   const data = await req.json();
 
-// // Validate required fields (add more validation as necessary)
-// if (!data.vesselImoNo || !data.companyName || !data.contactPerson || !data.email || !data.mobileNo) {
-//   return NextResponse.json({ message: "Missing required fields" }, { status: 400 });
-// }
-
-  // Helper function to parse dates
   const parseDate = (dateStr) => {
+    if (!dateStr) return null;
     const parsedDate = new Date(dateStr);
     return isNaN(parsedDate.getTime()) ? null : parsedDate;
   };
 
-  // Convert string values to the appropriate types (numbers and dates)
-  data.creditDays = parseInt(data.creditDays, 10);
-  data.creditLimit = parseFloat(data.creditLimit);
-  data.sudInvoiceToOwners = parseFloat(data.sudInvoiceToOwners);
-  data.actualPayment = parseFloat(data.actualPayment);
-  data.bankCharges = parseFloat(data.bankCharges);
-  data.yardInvoiceToSUD = parseFloat(data.yardInvoiceToSUD);
-  data.vendorInvoiceToSUD = parseFloat(data.vendorInvoiceToSUD);
+  // Helper to parse numbers safely
+  const parseNumber = (numStr) => {
+    if (numStr === undefined || numStr === null || numStr === '') return undefined;
+    const n = parseFloat(numStr);
+    return isNaN(n) ? undefined : n;
+  };
 
-  // Convert dates to proper Date objects
+  // Parse main numeric fields safely
+  data.sudInvoiceToOwners = parseNumber(data.sudInvoiceToOwners);
+  data.actualPayment = parseNumber(data.actualPayment);
+  data.bankCharges = parseNumber(data.bankCharges);
+  data.yardInvoiceToSUD = parseNumber(data.yardInvoiceToSUD);
+  data.creditDays = data.creditDays ? parseInt(data.creditDays, 10) : undefined;
+  data.creditLimit = parseNumber(data.creditLimit);
+
+  // Parse dates
   data.actualPaymentDate = parseDate(data.actualPaymentDate);
   data.dueDate = parseDate(data.dueDate);
   data.yardActualPaymentDate = parseDate(data.yardActualPaymentDate);
   data.yardPaymentDueDate = parseDate(data.yardPaymentDueDate);
-  data.vendorActualPaymentDate = parseDate(data.vendorActualPaymentDate);
-  data.vendorPaymentDueDate = parseDate(data.vendorPaymentDueDate);
 
-  // Ensure the address object is valid (add more checks as needed)
-  // if (data.address) {
-  //   data.address.pinCode = data.address.pinCode || '';
-  //   data.address.countrySelect = data.address.countrySelect || '';
-  //   data.address.line1 = data.address.line1 || ''; // Ensure line1 is valid
-  //   // Additional address validation as needed
-  // }
+  // Process vendorDetails array
+  if (Array.isArray(data.vendorDetails)) {
+    data.vendorDetails = data.vendorDetails.map((vendor) => ({
+      vendorInvoiceToSUD: parseNumber(vendor.vendorInvoiceToSUD),
+      vendorActualPaymentDate: parseDate(vendor.vendorActualPaymentDate),
+      vendorPaymentDueDate: vendor.vendorPaymentDueDate,    
+    }));
+  }
 
   try {
-    // Log the sanitized data for debugging
     console.log("Sanitized data:", data);
-
-    // Create a new ship entry with the sanitized data
     const newShip = await Ship.create(data);
-    console.log(newShip, data)
-    // Return the new ship entry
     return NextResponse.json({ newShip, success: true }, { status: 201 });
   } catch (error) {
     console.error("Error creating ship entry:", error);
