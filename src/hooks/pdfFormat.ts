@@ -105,13 +105,13 @@ export const handleDownloadPDF = async (formData: any) => {
     doc.setFontSize(10).setFont("helvetica", "semibold").text("VESSEL", 20, 46);
     doc.setFont("helvetica", "400").text(`: ${formData.vesselName} (${formData.vesselImoNo})`, 40, 46);
 
-    doc.setFont("helvetica", "semibold").text("To", 20, 50);
+    doc.setFont("helvetica", "semibold").text("TO", 20, 50);
     doc.setFont("helvetica", "400").text(`: ${formData.to}`, 40, 50);
 
     doc.setFont("helvetica", "semibold").text("C/O", 20, 54);
     doc.setFont("helvetica", "400").text(`: ${formData.co}`, 40, 54);
 
-    doc.setFont("helvetica", "semibold").text("Add", 20, 58);
+    doc.setFont("helvetica", "semibold").text("ADD", 20, 58);
     // const address =;
     doc.text(':', 40, 58)
     doc.text(doc.splitTextToSize(`${formData.billingTo.streetAddress}, `, (maxWidth - 20)), 42, 58);
@@ -122,8 +122,8 @@ export const handleDownloadPDF = async (formData: any) => {
     doc.setFont("helvetica", "400").setFontSize(10).text(`INV DATE: ${dayjs(formData.invoiceDate).format("DD MMM YYYY")}`, 150, 80);
     doc.text("DEAR SIR,", 20, 85);
     formData?.paymentNumber === "FINAL" ? doc.text(doc.splitTextToSize(`THE SHIP HAS BEEN REPAIRED IN ${formData?.billingFrom?.companyName?.toUpperCase()}. THROUGH SUD GROUP H.K. CO., LTD. DURING, ${formData?.billingFrom?.streetAddress?.toUpperCase()} To ${formData?.billingFrom?.landmark?.toUpperCase()}`, maxWidth), 20, 90) : doc.text(doc.splitTextToSize(`CAPTIONED SHIP DRY DOCKING REPAIR IS IN PROGRESS IN ${formData?.billingFrom?.companyName?.toUpperCase()} LTD. THROUGH SUD GROUP H.K. CO., LTD.`, maxWidth), 20, 90);
-    formData?.paymentNumber === "FINAL" ? "" : doc.text(doc.splitTextToSize(`VESEL ARRIVED SHIPYARD ON ${formData?.billingFrom?.streetAddress?.toUpperCase()} AND ALL REPAIRING WORKS IN PROGRESS UPTO SATISFACTION OF SHIPOWNER’S REPRESENTATIVE, SHIP’S CREW, AND CLASS.`, maxWidth), 20, 99);
-    formData?.paymentNumber === "FINAL" ? doc.text(doc.splitTextToSize(`ALL REPAIRING WORKS HAVE BEEN COMPLETED WITH SATISFACTION AND APPROVED BY SHIP OWNER’S REPRESENTATIVE, SHIP’S CREW AND CLASS.`, maxWidth), 20, 102) : doc.text(doc.splitTextToSize(`AS PER INITIAL AGREEMRNT WE REQUEST FOR PART PAYMENT OF ABOVE MENTIONED DRY DOCKING REPAIR.`, maxWidth), 20, 112);
+    formData?.paymentNumber === "FINAL" ? "" : doc.text(doc.splitTextToSize(`VESSEL ARRIVED SHIPYARD ON ${formData?.billingFrom?.streetAddress?.toUpperCase()} AND ALL REPAIRING WORKS IN PROGRESS UPTO SATISFACTION OF SHIP OWNER’S REPRESENTATIVE, SHIP’S CREW, AND CLASS.`, maxWidth), 20, 99);
+    formData?.paymentNumber === "FINAL" ? doc.text(doc.splitTextToSize(`ALL REPAIRING WORKS HAVE BEEN COMPLETED WITH SATISFACTION AND APPROVED BY SHIP OWNER’S REPRESENTATIVE, SHIP’S CREW AND CLASS.`, maxWidth), 20, 102) : doc.text(doc.splitTextToSize(`AS PER INITIAL AGREEMENT WE REQUEST FOR PART PAYMENT OF ABOVE MENTIONED DRY DOCKING REPAIR.`, maxWidth), 20, 112);
     formData?.paymentNumber === "FINAL" ? doc.text(doc.splitTextToSize(`CONSIDERING QUAITY, REPAIR TIME, WEATHER CONDITIONS, ADDITIONAL WORKS, DEVIATION COMPENSATION, WHOLE PROCESS OF THE REPAIR AND OTHER FACTORS CONCERNED WITH BILLING, BOTH SIDES ACCEPTED AND SETTLED THE BILL AS FOLLOWS.`, maxWidth), 20, 114) : doc.text(doc.splitTextToSize(`FINAL YARD BILL WILL BE ON BASIS OF DISCUSSION AND AGREEMENT BY OWNER’S REPRESENTATIVE ON BASIS OF FINAL WORK DONE LIST.`, maxWidth), 20, 125);
     formData?.paymentNumber === "FINAL" ? doc.text(doc.splitTextToSize(`THE AMOUNT OF THE BILL IN THIS AGREEMENT IS FINALLY SETTLED AFTER SIGNING BY BOTH
 PARTIES.`, maxWidth), 20, 128) : "";
@@ -276,13 +276,13 @@ PARTIES.`, maxWidth), 20, 128) : "";
     const truncatedStreet = truncateText(formData?.billingTo?.streetAddress, 65);
 
     // Add to PDF
-    doc.setFontSize(11).text(doc.splitTextToSize(`C/O: ${truncatedCo}`, (maxWidth - 80)), 117, 78);
-    doc.setFontSize(11).text(doc.splitTextToSize(`Add: ${truncatedStreet}`, (maxWidth - 80)), 117, 83);
+    doc.setFontSize(11).text(doc.splitTextToSize(`C/O: ${truncatedCo}`, (maxWidth - 80)), 117, 74);
+    doc.setFontSize(11).text(doc.splitTextToSize(`ADD: ${truncatedStreet}`, (maxWidth - 80)), 117, 83);
     doc.setFontSize(11).text(doc.splitTextToSize(`Email: ${formData?.businessMail?.toLowerCase()}`, (maxWidth - 90)), 117, 94);
 
 
     doc.setLineWidth(0.4).line(5, 66, 115, 66);
-    doc.setFont("helvetica", "semibold").setFontSize(12).text(`Invoice date:${dayjs(formData?.dueDate).format("DD/MMM/YYYY")}`, 7, 70);
+    doc.setFont("helvetica", "semibold").setFontSize(12).text(`Invoice Payment Due date:${dayjs(formData?.dueDate).format("DD/MMM/YYYY")}`, 7, 70);
     // Invoice payment due date: 07/Feb/2025
     doc.setLineWidth(0.4).line(5, 72, 115, 72);
     doc.setFontSize(11).text(doc.splitTextToSize(`Remark: PO NUMBER: ${formData?.portsName}`, (maxWidth - 70)), 7, 77);
@@ -346,7 +346,7 @@ PARTIES.`, maxWidth), 20, 128) : "";
       // let totalAmount = 0;
 
       for (let i = 0; i < totalRows; i++) {
-        const y = startY + i * rowHeight + 7;
+        const y = startY + i * rowHeight + 4;
         const item = items[i];
         const unitCost = parseFloat(item.unitCost) || 0;
         const quantity = parseFloat(item.quantity) || 0;
@@ -355,7 +355,7 @@ PARTIES.`, maxWidth), 20, 128) : "";
 
         doc.setFontSize(9);
         doc.text(`${i + 1}`, 7, y);
-        doc.text(item.itemDesc || '', 17, y);
+        doc.text(doc.splitTextToSize(`${item.itemDesc}` || '', (maxWidth - 75)), 17, y);
         doc.text(item.unit || '', 117, y);
         doc.text(item.unitCost.toString(), 137, y);
         doc.text(item.quantity.toString(), 157, y);
@@ -396,7 +396,7 @@ PARTIES.`, maxWidth), 20, 128) : "";
 
     // Total Invoice amount in words:
     doc.setFontSize(10.5).text(doc.splitTextToSize(`Total Invoice amount in words:`, (maxWidth - 70)), 7, 231.3);
-    doc.setFontSize(10.5).text(doc.splitTextToSize(`${formData?.totalAmountInWords}`, (maxWidth - 100)), 70, 231.3);
+    doc.setFontSize(10.5).text(doc.splitTextToSize(`${formData?.totalAmountInWords}`, (maxWidth - 30)), 70, 231.3);
 
 
     doc.setLineWidth(0.4).line(5, 232, 205, 232);
