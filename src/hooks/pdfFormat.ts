@@ -121,7 +121,7 @@ export const handleDownloadPDF = async (formData: any) => {
 
     doc.setFont("helvetica", "400").setFontSize(10).text(`INV DATE: ${dayjs(formData.invoiceDate).format("DD MMM YYYY")}`, 150, 80);
     doc.text("DEAR SIR,", 20, 85);
-    formData?.paymentNumber === "FINAL" ? doc.text(doc.splitTextToSize(`THE SHIP HAS BEEN REPAIRED IN ${formData?.billingFrom?.companyName?.toUpperCase()}. THROUGH SUD GROUP H.K. CO., LTD. DURING, ${formData?.billingFrom?.streetAddress?.toUpperCase()} To ${formData?.billingFrom?.landmark?.toUpperCase()}`, maxWidth), 20, 90) : doc.text(doc.splitTextToSize(`CAPTIONED SHIP DRY DOCKING REPAIR IS IN PROGRESS IN ${formData?.billingFrom?.companyName?.toUpperCase()} LTD. THROUGH SUD GROUP H.K. CO., LTD.`, maxWidth), 20, 90);
+    formData?.paymentNumber === "FINAL" ? doc.text(doc.splitTextToSize(`THE SHIP HAS BEEN REPAIRED IN ${formData?.billingFrom?.companyName?.toUpperCase()}. THROUGH SUD GROUP H.K. CO., LTD. DURING, ${formData?.billingFrom?.streetAddress?.toUpperCase()} To ${formData?.billingFrom?.landmark?.toUpperCase()}`, maxWidth), 20, 90) : doc.text(doc.splitTextToSize(`CAPTIONED SHIP DRY DOCKING REPAIR IS IN PROGRESS IN ${formData?.billingFrom?.companyName?.toUpperCase()}. THROUGH SUD GROUP H.K. CO., LTD.`, maxWidth), 20, 90);
     formData?.paymentNumber === "FINAL" ? "" : doc.text(doc.splitTextToSize(`VESSEL ARRIVED SHIPYARD ON ${formData?.billingFrom?.streetAddress?.toUpperCase()} AND ALL REPAIRING WORKS IN PROGRESS UPTO SATISFACTION OF SHIP OWNER’S REPRESENTATIVE, SHIP’S CREW, AND CLASS.`, maxWidth), 20, 99);
     formData?.paymentNumber === "FINAL" ? doc.text(doc.splitTextToSize(`ALL REPAIRING WORKS HAVE BEEN COMPLETED WITH SATISFACTION AND APPROVED BY SHIP OWNER’S REPRESENTATIVE, SHIP’S CREW AND CLASS.`, maxWidth), 20, 102) : doc.text(doc.splitTextToSize(`AS PER INITIAL AGREEMENT WE REQUEST FOR PART PAYMENT OF ABOVE MENTIONED DRY DOCKING REPAIR.`, maxWidth), 20, 112);
     formData?.paymentNumber === "FINAL" ? doc.text(doc.splitTextToSize(`CONSIDERING QUAITY, REPAIR TIME, WEATHER CONDITIONS, ADDITIONAL WORKS, DEVIATION COMPENSATION, WHOLE PROCESS OF THE REPAIR AND OTHER FACTORS CONCERNED WITH BILLING, BOTH SIDES ACCEPTED AND SETTLED THE BILL AS FOLLOWS.`, maxWidth), 20, 114) : doc.text(doc.splitTextToSize(`FINAL YARD BILL WILL BE ON BASIS OF DISCUSSION AND AGREEMENT BY OWNER’S REPRESENTATIVE ON BASIS OF FINAL WORK DONE LIST.`, maxWidth), 20, 125);
@@ -272,12 +272,12 @@ PARTIES.`, maxWidth), 20, 128) : "";
     };
 
     // Truncate values
-    const truncatedCo = truncateText(formData?.co, 40);
+    const truncatedCo = truncateText(formData?.co, 65);
     const truncatedStreet = truncateText(formData?.billingTo?.streetAddress, 65);
 
     // Add to PDF
-    doc.setFontSize(11).text(doc.splitTextToSize(`C/O: ${truncatedCo}`, (maxWidth - 80)), 117, 74);
-    doc.setFontSize(11).text(doc.splitTextToSize(`ADD: ${truncatedStreet}`, (maxWidth - 80)), 117, 83);
+    doc.setFontSize(11).text(doc.splitTextToSize(`C/O: ${truncatedCo}`, (maxWidth - 85)), 117, 74);
+    doc.setFontSize(11).text(doc.splitTextToSize(`ADD: ${truncatedStreet}`, (maxWidth - 85)), 117, 83);
     doc.setFontSize(11).text(doc.splitTextToSize(`Email: ${formData?.businessMail?.toLowerCase()}`, (maxWidth - 90)), 117, 94);
 
 
