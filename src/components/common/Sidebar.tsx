@@ -53,16 +53,16 @@ const Sidebar: React.FC = () => {
         delete: true,
       },
     },
-    {
-      module: "Manage Yard and Vendor",
-      access: {
-        read: true,
-        create: true,
-        invoice: true,
-        write: true,
-        delete: true,
-      },
-    },
+    // {
+    //   module: "Manage Yard and Vendor",
+    //   access: {
+    //     read: true,
+    //     create: true,
+    //     invoice: true,
+    //     write: true,
+    //     delete: true,
+    //   },
+    // },
   ];
 
   let filteredTabs: any = [];

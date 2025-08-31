@@ -186,7 +186,7 @@ PARTIES.`, maxWidth), 20, 128) : "";
 
 
     formData?.paymentNumber !== "FINAL" && doc.text("SUD GROUP BANK ACCOUNT.", 20, 175);
-    formData?.paymentNumber !== "FINAL" ? doc.text("PLEASE MAKE REMITTANCE TO OUR BELOW ACCOUNT.", 20, 180) : doc.text("PLEASE MAKE REMITTANCE TO OUR BELOW ACCOUNT.", 20, 210);
+    formData?.paymentNumber !== "FINAL" ? doc.text("PLEASE MAKE REMITTANCE TO OUR BELOW ACCOUNT.", 20, 180) : doc.text("PLEASE MAKE REMITTANCE TO OUR BELOW ACCOUNT.", 20, currentY + 5);
 
     doc.setFontSize(13)
     if (formData?.paymentNumber !== "FINAL") {
@@ -204,19 +204,19 @@ PARTIES.`, maxWidth), 20, 128) : "";
       doc.line(20, 210, 190, 210);
       doc.line(190, 182, 190, 210);
     } else {
-      doc.line(20, 212, 190, 212);
-      doc.line(20, 212, 20, 240);
-      doc.text("Account Name : SUD Group Hong Kong Company Limited.", 22, 217);
-      doc.text("Account number : 582-634960-838", 22, 223);
-      doc.text("Beneficiary Bank name : HSBC (Hong Kong)", 22, 228);
+      doc.line(20, currentY + 7, 190, currentY + 7);
+      doc.line(20, currentY + 7, 20, currentY + 38);
+      doc.text("Account Name : SUD Group Hong Kong Company Limited.", 22, currentY + 13);
+      doc.text("Account number : 582-634960-838", 22, currentY + 18);
+      doc.text("Beneficiary Bank name : HSBC (Hong Kong)", 22, currentY + 23);
       doc.text(
         doc.splitTextToSize("Beneficiary Bank Address: 1 Queen's Road Central, Hong Kong", maxWidth),
         22,
-        233
+        currentY + 28
       );
-      doc.text("Swift Address : HSBCHKHHHKH", 22, 238);
-      doc.line(20, 240, 190, 240);
-      doc.line(190, 212, 190, 240);
+      doc.text("Swift Address : HSBCHKHHHKH", 22, currentY + 33);
+      doc.line(20, currentY + 38, 190, currentY + 38);
+      doc.line(190, currentY + 7, 190, currentY + 38);
     }
 
     doc.setFontSize(9);
@@ -224,7 +224,7 @@ PARTIES.`, maxWidth), 20, 128) : "";
 
     if (formData?.paymentNumber === "FINAL") {
       if (signBase64) {
-        doc.addImage(signBase64, "PNG", 20, 250, 50, 25);
+        doc.addImage(signBase64, "PNG", 20, currentY + 45, 50, 25);
       }
     } else {
       if (signBase64) {
@@ -232,12 +232,12 @@ PARTIES.`, maxWidth), 20, 128) : "";
       }
     }
 
-    formData?.paymentNumber === "FINAL" ? doc.text("FOR AND ON BEHALF OF", 20, 275) : doc.text("For and on behalf of", 20, 250);
-    formData?.paymentNumber === "FINAL" && doc.text("FOR AND ON BEHALF OF OWNER", 120, 270);
+    formData?.paymentNumber === "FINAL" ? doc.text("FOR AND ON BEHALF OF", 20, currentY + 70) : doc.text("For and on behalf of", 20, 250);
+    formData?.paymentNumber === "FINAL" && doc.text("FOR AND ON BEHALF OF OWNER", 120, currentY +70);
 
-    formData?.paymentNumber === "FINAL" ? doc.setFont("helvetica", 'semibold').setFontSize(11).text("SUD GROUP HONG KONG CO., LTD.", 20, 280) : doc.setFont("helvetica", 'semibold').setFontSize(11).text("SUD GROUP HONG KONG CO., LTD.", 20, 255);
-    formData?.paymentNumber === "FINAL" && doc.setFont("helvetica", 'semibold').setFontSize(11).text(`${formData?.billingTo?.companyName}`, 120, 275);
-    formData?.paymentNumber === "FINAL" && doc.setFont("helvetica", 'semibold').setFontSize(11).text(`${formData.vesselName} (${formData.vesselImoNo})`, 120, 280);
+    formData?.paymentNumber === "FINAL" ? doc.setFont("helvetica", 'semibold').setFontSize(11).text("SUD GROUP HONG KONG CO., LTD.", 20, currentY + 75) : doc.setFont("helvetica", 'semibold').setFontSize(11).text("SUD GROUP HONG KONG CO., LTD.", 20, 255);
+    formData?.paymentNumber === "FINAL" && doc.setFont("helvetica", 'semibold').setFontSize(11).text(`${formData?.billingTo?.companyName}`, 120, currentY +75);
+    formData?.paymentNumber === "FINAL" && doc.setFont("helvetica", 'semibold').setFontSize(11).text(`${formData.vesselName} (${formData.vesselImoNo})`, 120, currentY + 80);
 
   }
   else {
