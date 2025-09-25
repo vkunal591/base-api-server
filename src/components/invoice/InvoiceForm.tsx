@@ -29,6 +29,7 @@ const InvoiceForm = ({ responseData }: any) => {
     totalAmountInWords: "",
     remarks: responseData?.remarks || "",
     businessMail: "",
+    isASAgentOnly: false,
     billingTo: {
       companyName: responseData?.companyName || "",
       streetAddress: responseData?.street || "",
@@ -138,6 +139,7 @@ const InvoiceForm = ({ responseData }: any) => {
         billingFrom: { ...prevData?.billingFrom, ...responseData?.billingFrom },
         bankDetails: { ...prevData?.bankDetails, ...responseData?.bankDetails },
         workDetails: responseData?.workDetails || prevData?.workDetails,
+        isASAgentOnly: responseData?.isASAgentOnly || prevData?.isASAgentOnly,
         paymentStages: prevData?.paymentStages.map((stage, index) => ({
           ...stage,
           payment:
@@ -170,7 +172,8 @@ const InvoiceForm = ({ responseData }: any) => {
   }, [responseData]);
 
   const handleChange = (e: any, workDetailIndex?: number) => {
-    const { name, value } = e?.target;
+    const { name, value, checked, type } = e?.target;
+    const newValue = type === "checkbox" ? checked : value;
 
     setFormData((prevData) => {
       // Handle nested fields like billingTo, billingFrom, bankDetails
@@ -234,6 +237,13 @@ const InvoiceForm = ({ responseData }: any) => {
           };
         }
       }
+
+      if (name === "isASAgentOnly") {
+        return {
+          ...prevData,
+          isASAgentOnly: newValue,
+        };
+      }
       // Handle top-level fields
       return {
         ...prevData,
@@ -270,7 +280,6 @@ const InvoiceForm = ({ responseData }: any) => {
       });
 
       const responseData = await response.json();
-
       if (response.ok) {
         toast.success("Invoice Created");
         const fetchUrl = `/api/invoice?page=1&limit=10`;
@@ -278,11 +287,11 @@ const InvoiceForm = ({ responseData }: any) => {
         const data = await resp.json();
         router.push("/dashboard/billing");
       } else {
-        toast.error("Something went wrong! Please check invoice number");
+        toast.error(responseData?.message || "Something went wrong! Please check invoice number");
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error: ", error);
-      toast.error("Something went wrong!");
+      toast.error(error?.message || "Something went wrong!");
     } finally {
       setSubmitting(false);
     }
@@ -702,17 +711,39 @@ const InvoiceForm = ({ responseData }: any) => {
 
           {formData.paymentNumber === "FINAL" && (
             <div>
-              <h2 className="mb-2">Client Signature:</h2>
-              <input
-                type="text"
-                placeholder="Enter name for client signature"
-                name="billingTo.companyName"
-                value={formData.billingTo.companyName}
-                onChange={handleChange}
-                className="w-full p-2 mb-2 border border-gray-300 rounded"
-              />
+              <div>
+                <h2 className="mb-2">Client Signature:</h2>
+                <input
+                  type="text"
+                  placeholder="Enter name for client signature"
+                  name="billingTo.companyName"
+                  value={formData.billingTo.companyName}
+                  onChange={handleChange}
+                  className="w-full p-2 mb-2 border border-gray-300 rounded"
+                />
+              </div>
+
+              {/* Checkbox for AS Agents only */}
+              <div className="mt-4">
+                <label className="inline-flex items-center">
+                  <input
+                    type="checkbox"
+                    name="isASAgentOnly"
+                    checked={formData.isASAgentOnly || false}
+                    onChange={(e) => handleChange({
+                      target: {
+                        name: 'isASAgentOnly',
+                        value: e.target.checked
+                      }
+                    })}
+                    className="form-checkbox"
+                  />
+                  <span className="ml-2">AS Agents Only</span>
+                </label>
+              </div>
             </div>
           )}
+
 
           <div className="lg:flex lg:justify-between">
             <div className="flex space-x-4 mt-4">

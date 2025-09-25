@@ -1,31 +1,45 @@
-[@echo off
-SETLOCAL
+@echo off
+SETLOCAL ENABLEEXTENSIONS
 
-:: Set the Next.js project path
-SET PROJECT_PATH=D:\Kunal-WorkSpace\ReadDev\base-api-server
+:: === Set your Next.js project path ===
+SET "PROJECT_PATH=C:\Users\Rana Durgesh\base-api-server"
 
-:: Navigate to project directory
+:: === Navigate to the project folder ===
 cd /d "%PROJECT_PATH%" || (
-    echo Invalid project path! Please check the path and try again.
+    echo ❌ Invalid project path! Please check the path.
     pause
     exit /b
 )
 
-:: Start the Next.js server in a hidden background process
-start /min cmd /c "npm run start >nul 2>&1"
+:: === Launch the Next.js server in a minimized command window ===
+start "Next.js Server" /min cmd /c "npm run start"
 
-:: Wait for the server to be ready (adjust if needed)
+:: === Wait for the server to start ===
 timeout /t 10 /nobreak >nul
 
-:: Open the app in Edge (or Chrome)
-SET URL=http://localhost:3000
+:: === Set your local URL ===
+SET "URL=http://localhost:3000"
 
-:: Open in Edge App Mode
-start msedge --new-window --app=%URL%
+:: === Try to find Microsoft Edge path ===
+SET "EDGE_PATH="
+for %%I in (
+    "C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe"
+    "C:\Program Files\Microsoft\Edge\Application\msedge.exe"
+) do (
+    if exist %%~I (
+        SET "EDGE_PATH=%%~I"
+    )
+)
 
-:: Uncomment below if using Chrome instead
-:: start chrome --new-window --app=%URL%
+:: === Fallback if Edge not found ===
+if not defined EDGE_PATH (
+    echo ❌ Microsoft Edge not found!
+    pause
+    exit /b
+)
 
-:: Hide this script and wait until the browser closes
+:: === Launch Edge in App mode and wait until it's closed ===f
+start /wait "" "%EDGE_PATH%" --new-window --app=%URL%
+
+:: === No final message to minimize output ===
 exit
-

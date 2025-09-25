@@ -103,7 +103,7 @@ export const handleDownloadPDF = async (formData: any) => {
     doc.setLineWidth(1).line(18, 41, 190, 41);
 
     doc.setFontSize(10).setFont("helvetica", "semibold").text("VESSEL", 20, 46);
-    doc.setFont("helvetica", "400").text(`: ${formData.vesselName} (${formData.vesselImoNo})`, 40, 46);
+    doc.setFont("helvetica", "400").text(`: ${formData.vesselName} (IMP ${formData.vesselImoNo})`, 40, 46);
 
     doc.setFont("helvetica", "semibold").text("TO", 20, 50);
     doc.setFont("helvetica", "400").text(`: ${formData.to}`, 40, 50);
@@ -114,17 +114,44 @@ export const handleDownloadPDF = async (formData: any) => {
     doc.setFont("helvetica", "semibold").text("ADD", 20, 58);
     // const address =;
     doc.text(':', 40, 58)
-    doc.text(doc.splitTextToSize(`${formData.billingTo.streetAddress}, `, (maxWidth - 20)), 42, 58);
+    doc.text(doc.splitTextToSize(`${formData.billingTo.streetAddress}`, (maxWidth - 20)), 42, 58);
 
-    formData?.paymentNumber === "FINAL" ? doc.setFont("helvetica", "semibol").setFontSize(10).text(`${formData?.paymentNumber || "FINAL"} AGREEMENT & INVOICE (INVOICE NO: ${formData.invoiceNumber})`, 47, 73) : doc.setFont("helvetica", "semibol").setFontSize(10).text(`${formData?.paymentNumber || "1ST"} PAYMENT REQUEST & INVOICE (INVOICE NO: ${formData.invoiceNumber})`, 47, 68);
+    // formData?.paymentNumber === "FINAL" ? doc.setFont("helvetica", "semibol").setFontSize(10).text(`${formData?.paymentNumber || "FINAL"} AGREEMENT & INVOICE (INVOICE NO: ${formData.invoiceNumber})`, 47, 73) : doc.setFont("helvetica", "semibol").setFontSize(10).text(`${formData?.paymentNumber || "1ST"} PAYMENT REQUEST & INVOICE (INVOICE NO: ${formData.invoiceNumber})`, 47, 68);
+    // Center align text Heading number
+
+    const docWidth = doc.internal.pageSize.getWidth(); // Get PDF page width
+
+    // Determine the text based on payment number
+    const isFinal = formData?.paymentNumber === "FINAL";
+    const titleText = isFinal
+      ? `${formData?.paymentNumber || "FINAL"} AGREEMENT & INVOICE (INVOICE NO: ${formData.invoiceNumber})`
+      : `${formData?.paymentNumber || "1ST"} PAYMENT REQUEST & INVOICE (INVOICE NO: ${formData.invoiceNumber})`;
+
+    // Set font
+    doc.setFont("helvetica", "semibol").setFontSize(10);
+
+    // Calculate text width
+    const textWidth = doc.getTextWidth(titleText);
+
+    // Calculate center position
+    const centerX = (docWidth - textWidth) / 2;
+
+    // Set Y position depending on the type
+    const posY = isFinal ? 73 : 68;
+
+    // Draw the text
+    doc.text(titleText, centerX, posY);
+
+
+    //  End Center Align payment no 
     formData?.paymentNumber === "FINAL" ? doc.setLineWidth(0.4).line(47, 75, 165, 75) : doc.setLineWidth(0.4).line(47, 70, 165, 70);
 
     doc.setFont("helvetica", "400").setFontSize(10).text(`INV DATE: ${dayjs(formData.invoiceDate).format("DD MMM YYYY")}`, 150, 80);
     doc.text("DEAR SIR,", 20, 85);
-    formData?.paymentNumber === "FINAL" ? doc.text(doc.splitTextToSize(`THE SHIP HAS BEEN REPAIRED IN ${formData?.billingFrom?.companyName?.toUpperCase()}. THROUGH SUD GROUP H.K. CO., LTD. DURING, ${formData?.billingFrom?.streetAddress?.toUpperCase()} To ${formData?.billingFrom?.landmark?.toUpperCase()}`, maxWidth), 20, 90) : doc.text(doc.splitTextToSize(`CAPTIONED SHIP DRY DOCKING REPAIR IS IN PROGRESS IN ${formData?.billingFrom?.companyName?.toUpperCase()}. THROUGH SUD GROUP H.K. CO., LTD.`, maxWidth), 20, 90);
+    formData?.paymentNumber === "FINAL" ? doc.text(doc.splitTextToSize(`THE SHIP HAS BEEN REPAIRED IN ${formData?.billingFrom?.companyName?.toUpperCase()} THROUGH SUD GROUP H.K. CO., LTD. DURING ${formData?.billingFrom?.streetAddress?.toUpperCase()} To ${formData?.billingFrom?.landmark?.toUpperCase()}`, maxWidth), 20, 90) : doc.text(doc.splitTextToSize(`CAPTIONED SHIP DRY DOCKING REPAIR IS IN PROGRESS IN ${formData?.billingFrom?.companyName?.toUpperCase()} THROUGH SUD GROUP H.K. CO., LTD.`, maxWidth), 20, 90);
     formData?.paymentNumber === "FINAL" ? "" : doc.text(doc.splitTextToSize(`VESSEL ARRIVED SHIPYARD ON ${formData?.billingFrom?.streetAddress?.toUpperCase()} AND ALL REPAIRING WORKS IN PROGRESS UPTO SATISFACTION OF SHIP OWNER’S REPRESENTATIVE, SHIP’S CREW, AND CLASS.`, maxWidth), 20, 99);
     formData?.paymentNumber === "FINAL" ? doc.text(doc.splitTextToSize(`ALL REPAIRING WORKS HAVE BEEN COMPLETED WITH SATISFACTION AND APPROVED BY SHIP OWNER’S REPRESENTATIVE, SHIP’S CREW AND CLASS.`, maxWidth), 20, 102) : doc.text(doc.splitTextToSize(`AS PER INITIAL AGREEMENT WE REQUEST FOR PART PAYMENT OF ABOVE MENTIONED DRY DOCKING REPAIR.`, maxWidth), 20, 112);
-    formData?.paymentNumber === "FINAL" ? doc.text(doc.splitTextToSize(`CONSIDERING QUAITY, REPAIR TIME, WEATHER CONDITIONS, ADDITIONAL WORKS, DEVIATION COMPENSATION, WHOLE PROCESS OF THE REPAIR AND OTHER FACTORS CONCERNED WITH BILLING, BOTH SIDES ACCEPTED AND SETTLED THE BILL AS FOLLOWS.`, maxWidth), 20, 114) : doc.text(doc.splitTextToSize(`FINAL YARD BILL WILL BE ON BASIS OF DISCUSSION AND AGREEMENT BY OWNER’S REPRESENTATIVE ON BASIS OF FINAL WORK DONE LIST.`, maxWidth), 20, 125);
+    formData?.paymentNumber === "FINAL" ? doc.text(doc.splitTextToSize(`CONSIDERING QUALITY, REPAIR TIME, WEATHER CONDITIONS, ADDITIONAL WORKS, DEVIATION COMPENSATION, WHOLE PROCESS OF THE REPAIR AND OTHER FACTORS CONCERNED WITH BILLING, BOTH SIDES ACCEPTED AND SETTLED THE BILL AS FOLLOWS.`, maxWidth), 20, 114) : doc.text(doc.splitTextToSize(`FINAL YARD BILL WILL BE ON BASIS OF DISCUSSION AND AGREEMENT BY OWNER’S REPRESENTATIVE ON BASIS OF FINAL WORK DONE LIST.`, maxWidth), 20, 125);
     formData?.paymentNumber === "FINAL" ? doc.text(doc.splitTextToSize(`THE AMOUNT OF THE BILL IN THIS AGREEMENT IS FINALLY SETTLED AFTER SIGNING BY BOTH
 PARTIES.`, maxWidth), 20, 128) : "";
     console.log(data)
@@ -160,7 +187,7 @@ PARTIES.`, maxWidth), 20, 128) : "";
           stages.push({
             key,
             label,
-            value: `${formatPaymentAmount(Number(stage.payment))} ${stage.payBy} ${dayjs(stage.paymentDate).format('Do MMMM,YYYY').toUpperCase()}`,
+            value: `${formatPaymentAmount(Number(stage.payment))} ${stage.payBy} ${stage.paymentDate ? dayjs(stage.paymentDate).format('Do MMMM,YYYY').toUpperCase() : ""}`,
             y: currentY,
           });
           currentY += 5; // Increment y only when data exists
@@ -232,12 +259,12 @@ PARTIES.`, maxWidth), 20, 128) : "";
       }
     }
 
-    formData?.paymentNumber === "FINAL" ? doc.text("FOR AND ON BEHALF OF", 20, currentY + 70) : doc.text("For and on behalf of", 20, 250);
-    formData?.paymentNumber === "FINAL" && doc.text("FOR AND ON BEHALF OF OWNER", 120, currentY +70);
+    formData?.paymentNumber === "FINAL" ? doc.text(`FOR AND ON BEHALF OF`, 20, currentY + 70) : doc.text("For and on behalf of", 20, 250);
+    formData?.paymentNumber === "FINAL" && doc.text(`${formData?.isASAgentOnly ? "FOR AND ON BEHALF OF OWNER  (AS AGENTS ONLY)" : "FOR AND ON BEHALF OF OWNER"}`, 120, currentY + 70);
 
     formData?.paymentNumber === "FINAL" ? doc.setFont("helvetica", 'semibold').setFontSize(11).text("SUD GROUP HONG KONG CO., LTD.", 20, currentY + 75) : doc.setFont("helvetica", 'semibold').setFontSize(11).text("SUD GROUP HONG KONG CO., LTD.", 20, 255);
-    formData?.paymentNumber === "FINAL" && doc.setFont("helvetica", 'semibold').setFontSize(11).text(`${formData?.billingTo?.companyName}`, 120, currentY +75);
-    formData?.paymentNumber === "FINAL" && doc.setFont("helvetica", 'semibold').setFontSize(11).text(`${formData.vesselName} (${formData.vesselImoNo})`, 120, currentY + 80);
+    formData?.paymentNumber === "FINAL" && doc.setFont("helvetica", 'semibold').setFontSize(11).text(`${formData?.billingTo?.companyName}`, 120, currentY + 75);
+    formData?.paymentNumber === "FINAL" && doc.setFont("helvetica", 'semibold').setFontSize(11).text(`${formData.vesselName} (IMO ${formData.vesselImoNo})`, 120, currentY + 80);
 
   }
   else {

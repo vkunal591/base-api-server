@@ -83,7 +83,7 @@ export async function GET(req) {
     const invoices = await InvoiceModel.find(query)
       .skip((page - 1) * limit)
       .limit(limit);
-console.log(invoices)
+    console.log(invoices)
     const total = await InvoiceModel.countDocuments(query);
 
     return NextResponse.json({
@@ -91,9 +91,9 @@ console.log(invoices)
         result: invoices,
         // pagination: { totalItems:total, page, limit },
         // pagination: { currentPage:page, totalPages: Math.ceil(total / limit), totalItems: total },
-        pagination: { currentPage: page, totalPages: Math.ceil(total / limit),itemsPerPage:limit, totalItems: total }
+        pagination: { currentPage: page, totalPages: Math.ceil(total / limit), itemsPerPage: limit, totalItems: total }
       },
-      success: true,  
+      success: true,
     });
   } catch (error) {
     console.error("Error fetching invoices:", error);
@@ -104,11 +104,42 @@ console.log(invoices)
   }
 }
 
-
 export async function POST(req) {
-  await dbConnect();
-  const body = await req.json();
-  const newInvoice = new InvoiceModel(body);
-  await newInvoice.save();
-  return NextResponse.json({ data: { result: newInvoice, success: true } }, { status: 201 });
+  try {
+    await dbConnect();
+
+    const body = await req.json();
+    const { invoiceNumber } = body;
+
+    if (!invoiceNumber) {
+      return NextResponse.json(
+        { message: 'invoiceNumber is required' },
+        { status: 400 }
+      );
+    }
+
+    // Check if an invoice with the same invoiceNumber already exists
+    const isExist = await InvoiceModel.findOne({ invoiceNumber });
+
+    if (isExist) {
+      return NextResponse.json(
+        { message: 'Invoice with this invoiceNumber already exists' },
+        { status: 409 }
+      );
+    }
+
+    const newInvoice = new InvoiceModel(body);
+    await newInvoice.save();
+
+    return NextResponse.json(
+      { data: { result: newInvoice, success: true } },
+      { status: 201 }
+    );
+  } catch (error) {
+    console.error('POST /invoice error:', error);
+    return NextResponse.json(
+      { message: 'Internal Server Error' },
+      { status: 500 }
+    );
+  }
 }
