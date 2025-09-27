@@ -143,10 +143,10 @@ const Table: React.FC<TableProps> = ({
     else return "-";
   };
 
-  return (
-    <div className="overflow-x-scroll no-scrollba">
+  return (<div className="overflow-x-scroll no-scrollbar">
+    <div className="overflow-y-auto no-scrollbar" style={{ maxHeight: '70vh' }}>
       <table className="min-w-full bg-white text-center">
-        <thead>
+        <thead className="sticky top-0 bg-white z-10">
           <tr className="whitespace-nowrap">
             <th className="p-4 border text-left text-iconBlack border-info font-bold">
               Sr. No.
@@ -154,7 +154,9 @@ const Table: React.FC<TableProps> = ({
             {columns.map((col) => (
               <th
                 key={col.key}
-                style={{ maxWidth: `calc(100% / ${columns.length + 1})` }}
+                style={{
+                  maxWidth: `calc(100% / ${columns.length + 1})`,
+                }}
                 className="p-4 text-iconBlack font-bold border border-info text-left cursor-pointer"
                 onClick={() => col.sortable && handleSort(col.key)}
               >
@@ -196,11 +198,10 @@ const Table: React.FC<TableProps> = ({
                   >
                     {col.status ? (
                       <span
-                        className={`flex justify-center items-center rounded-md ${
-                          formatRowValue(row, col) === "true"
-                            ? "bg-green-50 text-green-600"
-                            : "bg-red-50 text-info-600"
-                        } px-2 py-1 text-xs font-medium text-gray-600 ring-1 ring-gray-500/10 ring-inset`}
+                        className={`flex justify-center items-center rounded-md ${formatRowValue(row, col) === "true"
+                          ? "bg-green-50 text-green-600"
+                          : "bg-red-50 text-info-600"
+                          } px-2 py-1 text-xs font-medium text-gray-600 ring-1 ring-gray-500/10 ring-inset`}
                       >
                         {formatRowValue(row, col)}
                       </span>
@@ -237,6 +238,7 @@ const Table: React.FC<TableProps> = ({
         </tbody>
       </table>
     </div>
+  </div>
   );
 };
 

@@ -30,6 +30,7 @@ const InvoiceForm = ({ responseData }: any) => {
     remarks: responseData?.remarks || "",
     businessMail: "",
     isASAgentOnly: false,
+    customize: responseData?.customize || "",
     billingTo: {
       companyName: responseData?.companyName || "",
       streetAddress: responseData?.street || "",
@@ -722,6 +723,17 @@ const InvoiceForm = ({ responseData }: any) => {
                   className="w-full p-2 mb-2 border border-gray-300 rounded"
                 />
               </div>
+              <div>
+                <h2 className="mb-2">Costomize (Optional):</h2>
+                <input
+                  type="text"
+                  placeholder="Enter name for client signature"
+                  name="customize"
+                  value={formData.customize}
+                  onChange={handleChange}
+                  className="w-full p-2 mb-2 border border-gray-300 rounded"
+                />
+              </div>
 
               {/* Checkbox for AS Agents only */}
               <div className="mt-4">
@@ -746,7 +758,7 @@ const InvoiceForm = ({ responseData }: any) => {
 
 
           <div className="lg:flex lg:justify-between">
-            <div className="flex space-x-4 mt-4">
+            <div className="flex space-x-4 mt-4 ml-auto">
               <button
                 className="bg-primary flex text-white px-4 py-2 rounded-md hover:bg-blue-600"
                 onClick={() => handleDownloadPDF(formData)}
@@ -756,7 +768,7 @@ const InvoiceForm = ({ responseData }: any) => {
                 <IoDocument width={15} height={15} className="m-auto ml-2" />
               </button>
             </div>
-            <div className="mt-4 flex justify-end gap-2">
+            <div className="mt-4 flex justify-end gap-2 hidden">
               <button
                 className="p-2 bg-primary flex text-white rounded"
                 type="submit"

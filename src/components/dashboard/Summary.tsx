@@ -209,7 +209,7 @@ const Summary = () => {
                 <th className="p-4 border border-infobg">Sr. No.</th>
                 <th className="p-4 border border-infobg">Invoice Number</th>
                 <th className="p-4 border border-infobg">Vessel IMO Number</th>
-                <th className="p-4 border border-infobg">Invoice Name</th>
+                <th className="p-4 border border-infobg">Vessel Name</th>
                 <th className="p-4 border border-infobg">Invoice Date</th>
                 <th className="p-4 border border-infobg">Due Date</th>
                 <th className="p-4 border border-infobg">Total Amount</th>

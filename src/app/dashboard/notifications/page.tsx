@@ -15,7 +15,7 @@ const columns = [
   // { key: "_id", label: "Invoice ID", sortable: false },
   { key: "invoiceNumber", label: "Invoice Number", sortable: true },
   { key: "vesselImoNo", label: "Vessel IMO Number", sortable: true },
-  { key: "vesselName", label: "Invoice Name", sortable: true },
+  { key: "vesselName", label: "Vessel Name", sortable: true },
   { key: "invoiceDate", label: "Invoice Date", sortable: true,isDate:true },
   { key: "dueDate", label: "Due Date", sortable: true ,isDate:true},
   { key: "totalAmount", label: "Total Amount", sortable: true, isCurrency:"$" },
