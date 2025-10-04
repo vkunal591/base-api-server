@@ -103,7 +103,7 @@ export const handleDownloadPDF = async (formData: any) => {
     doc.setLineWidth(1).line(18, 41, 190, 41);
 
     doc.setFontSize(10).setFont("helvetica", "semibold").text("VESSEL", 20, 46);
-    doc.setFont("helvetica", "400").text(`: ${formData.vesselName} (IMP ${formData.vesselImoNo})`, 40, 46);
+    doc.setFont("helvetica", "400").text(`: ${formData.vesselName} (IMO ${formData.vesselImoNo})`, 40, 46);
 
     doc.setFont("helvetica", "semibold").text("TO", 20, 50);
     doc.setFont("helvetica", "400").text(`: ${formData.to}`, 40, 50);
