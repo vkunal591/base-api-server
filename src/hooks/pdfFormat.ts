@@ -451,7 +451,7 @@ PARTIES.`, maxWidth), 20, 128) : "";
     doc.setLineWidth(0.4).line(170, 218, 170, 227);
     // Total Invoice amount (USD)
     doc.setFontSize(18).text(doc.splitTextToSize(`Total Invoice amount (USD)`, (maxWidth - 70)), 7, 225);
-    doc.setFontSize(14).text(doc.splitTextToSize(`${formatAmountWithCommas(totalAmount)}`, (maxWidth - 150)), 174, 225);
+    doc.setFontSize(14).text(doc.splitTextToSize(`${formatAmountWithCommas(totalAmount)}`, (maxWidth - 135)), 174, 225);
 
 
 
