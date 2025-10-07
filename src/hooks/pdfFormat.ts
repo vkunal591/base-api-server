@@ -420,7 +420,7 @@ PARTIES.`, maxWidth), 20, 128) : "";
         doc.text(`${i + 1}`, 7, y);
         doc.text(doc.splitTextToSize(`${item.itemDesc}` || '', (maxWidth - 75)), 17, y);
         doc.text(item.unit || '', 117, y);
-        doc.text(item.unitCost.toString(), 137, y);
+        doc.text(item.unitCost.toLocaleString('en-US'), 137, y);
         doc.text(item.quantity.toString(), 157, y);
         doc.text(amount.toLocaleString('en-US'), 182, y);
       }
