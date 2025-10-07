@@ -65,6 +65,11 @@ interface Invoice {
   __v: number;
 }
 
+// Helper to format payment amount with commas and "/-"
+const formatPaymentAmount = (amount: number): string => {
+  return amount.toLocaleString('en-US') + '/-';
+};
+
 export const handleDownloadPDF = async (formData: any) => {
   console.log(formData)
   const doc = new jsPDF();
@@ -157,21 +162,52 @@ PARTIES.`, maxWidth), 20, 128) : "";
     console.log(data)
 
 
-    formData?.paymentNumber === "FINAL" ? doc.setFont("helvetica", "bold").text(`${formData?.paymentNumber} AGREED AMOUNT: USD ${formData.totalAmount}/-`, 20, 137) : doc.setFont("helvetica", "bold").text(`PART REMITTANCE AMOUNT IN FIGURE: USD ${formData.totalAmount}/-`, 20, 146);
-    formData?.paymentNumber === "FINAL" ? doc.text(doc.splitTextToSize(`(IN WORDS: US DOLLAR ${formData.totalAmountInWords.toUpperCase()})`, maxWidth), 20, 141) : doc.text(doc.splitTextToSize(`PART REMITTANCE AMOUNT IN WORDS: US DOLLAR ${formData.totalAmountInWords.toUpperCase()}`, maxWidth), 20, 151);
-    doc.setFont("helvetica", "semibold")
-    formData?.paymentNumber !== "FINAL" && doc.line(20, 147, 110, 147);
-    formData?.paymentNumber !== "FINAL" && doc.line(20, 152, 165, 152);
+    // Define base coordinates
+    const startX = 20;
+    let y1, y2;
+    let text1, text2;
+
+    // Choose text and Y positions based on payment type
+    if (formData?.paymentNumber === "FINAL") {
+      text1 = `${formData?.paymentNumber} AGREED AMOUNT: USD ${formatPaymentAmount(Number(formData.totalAmount))}`;
+      y1 = 137;
+      y2 = 141;
+    } else {
+      text1 = `PART REMITTANCE AMOUNT IN FIGURE: USD ${formatPaymentAmount(Number(formData.totalAmount))}`;
+      y1 = 146;
+      y2 = 151;
+    }
+
+    // Print the first line of text
+    doc.setFont("helvetica", "bold").text(text1, startX, y1);
+
+    // Second line of text (in words)
+    const wordsText = formData?.paymentNumber === "FINAL"
+      ? `(IN WORDS: US DOLLAR ${formData.totalAmountInWords.toUpperCase()})`
+      : `PART REMITTANCE AMOUNT IN WORDS: US DOLLAR ${formData.totalAmountInWords.toUpperCase()}`;
+
+    doc.text(doc.splitTextToSize(wordsText, maxWidth), startX, y2);
+
+    // Draw dynamic underline only for non-final
+    if (formData?.paymentNumber !== "FINAL") {
+      doc.setFont("helvetica", "semibold");
+
+      // Measure text width dynamically
+      const textWidth1 = doc.getTextWidth(text1);
+      const textWidth2 = doc.getTextWidth(wordsText);
+
+      // Draw line exactly matching text length
+      doc.line(startX, y1 + 1, startX + textWidth1 + 10, y1 + 1); // Under first line
+      doc.line(startX, y2 + 1, startX + textWidth2 + 10, y2 + 1); // Under second line
+    }
+
 
     formData?.paymentNumber === "FINAL" ? doc.text("PAYMENT TERMS:", 20, 148) : doc.text("PAYMENT TERMS IS AS FOLLOWS.", 20, 160);;
     formData?.paymentNumber !== "FINAL" && doc.line(20, 161, 77, 161);
-    const paymentLine = `${formData?.paymentNumber} PAYMENT: USD ${formData?.totalAmount}/- REQUEST TO PAY BEFORE SHIP DEPARTURE.`;
+    const paymentLine = `${formData?.paymentNumber} PAYMENT: USD ${formatPaymentAmount(Number(formData?.totalAmount))} REQUEST TO PAY BEFORE SHIP DEPARTURE.`;
     formData?.paymentNumber !== "FINAL" && doc.text(doc.splitTextToSize(paymentLine.toUpperCase(), maxWidth), 20, 165);
 
-    // Helper to format payment amount with commas and "/-"
-    const formatPaymentAmount = (amount: number): string => {
-      return amount.toLocaleString('en-US') + '/-';
-    };
+
 
     // Generate payment stages with dynamic y only for valid data
     let currentY = 153;
@@ -342,7 +378,7 @@ PARTIES.`, maxWidth), 20, 128) : "";
 
     let totalAmount = 0;
     const formatAmountWithCommas = (amount: number): string => {
-      return amount.toLocaleString('en-IN') + '/-';
+      return amount.toLocaleString('en-US') + '/-';
     };
 
 
@@ -386,7 +422,7 @@ PARTIES.`, maxWidth), 20, 128) : "";
         doc.text(item.unit || '', 117, y);
         doc.text(item.unitCost.toString(), 137, y);
         doc.text(item.quantity.toString(), 157, y);
-        doc.text(amount.toLocaleString('en-IN'), 182, y);
+        doc.text(amount.toLocaleString('en-US'), 182, y);
       }
 
       // Total row
