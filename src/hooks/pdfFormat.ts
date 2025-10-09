@@ -112,14 +112,16 @@ export const handleDownloadPDF = async (formData: any) => {
 
     doc.setFont("helvetica", "semibold").text("TO", 20, 50);
     doc.setFont("helvetica", "400").text(`: ${formData.to}`, 40, 50);
+    doc.setFont("helvetica", "semibold").text("ADD", 20, 54);
+    doc.setFont("helvetica", "400").text(`: ${formData?.billingTo?.secondStreetAddress}`, 40, 54);
 
-    doc.setFont("helvetica", "semibold").text("C/O", 20, 54);
-    doc.setFont("helvetica", "400").text(`: ${formData.co}`, 40, 54);
+    doc.setFont("helvetica", "semibold").text("C/O", 20, 58);
+    doc.setFont("helvetica", "400").text(`: ${formData.co}`, 40, 58);
 
-    doc.setFont("helvetica", "semibold").text("ADD", 20, 58);
+    doc.setFont("helvetica", "semibold").text("ADD", 20, 62);
     // const address =;
-    doc.text(':', 40, 58)
-    doc.text(doc.splitTextToSize(`${formData.billingTo.streetAddress}`, (maxWidth - 20)), 42, 58);
+    doc.text(':', 40, 62)
+    doc.text(doc.splitTextToSize(`${formData.billingTo.streetAddress}`, (maxWidth - 20)), 42, 62);
 
     // formData?.paymentNumber === "FINAL" ? doc.setFont("helvetica", "semibol").setFontSize(10).text(`${formData?.paymentNumber || "FINAL"} AGREEMENT & INVOICE (INVOICE NO: ${formData.invoiceNumber})`, 47, 73) : doc.setFont("helvetica", "semibol").setFontSize(10).text(`${formData?.paymentNumber || "1ST"} PAYMENT REQUEST & INVOICE (INVOICE NO: ${formData.invoiceNumber})`, 47, 68);
     // Center align text Heading number

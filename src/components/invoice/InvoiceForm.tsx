@@ -34,6 +34,7 @@ const InvoiceForm = ({ responseData }: any) => {
     billingTo: {
       companyName: responseData?.companyName || "",
       streetAddress: responseData?.street || "",
+      secondStreetAddress: responseData?.street || "",
       landmark: responseData?.landmark || "",
       city: responseData?.city || "",
       country: responseData?.country || "",
@@ -172,7 +173,10 @@ const InvoiceForm = ({ responseData }: any) => {
     }
   }, [responseData]);
 
-  const handleChange = (e: any, workDetailIndex?: number) => {
+  const 
+  
+  
+  handleChange = (e: any, workDetailIndex?: number) => {
     const { name, value, checked, type } = e?.target;
     const newValue = type === "checkbox" ? checked : value;
 
@@ -466,6 +470,17 @@ const InvoiceForm = ({ responseData }: any) => {
               placeholder="Street Address"
               name="billingTo.streetAddress"
               value={formData.billingTo.streetAddress}
+              onChange={handleChange}
+              className="w-full p-2 mb-2 border border-gray-300 rounded"
+            />
+          </div>
+          <div>
+            <h3 className="font-bold mb-2">Second Address:</h3>
+            <input
+              type="text"
+              placeholder="Second Address"
+              name="billingTo.secondStreetAddress"
+              value={formData.billingTo.secondStreetAddress}
               onChange={handleChange}
               className="w-full p-2 mb-2 border border-gray-300 rounded"
             />
