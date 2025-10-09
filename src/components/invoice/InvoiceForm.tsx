@@ -173,89 +173,89 @@ const InvoiceForm = ({ responseData }: any) => {
     }
   }, [responseData]);
 
-  const 
-  
-  
-  handleChange = (e: any, workDetailIndex?: number) => {
-    const { name, value, checked, type } = e?.target;
-    const newValue = type === "checkbox" ? checked : value;
+  const
 
-    setFormData((prevData) => {
-      // Handle nested fields like billingTo, billingFrom, bankDetails
-      if (name.startsWith("billingTo.")) {
-        return {
-          ...prevData,
-          billingTo: {
-            ...prevData.billingTo,
-            [name.split(".")[1]]: value.toUpperCase(),
-          },
-        };
-      }
-      if (name.startsWith("billingFrom.")) {
-        return {
-          ...prevData,
-          billingFrom: {
-            ...prevData.billingFrom,
-            [name.split(".")[1]]: value.toUpperCase(),
-          },
-        };
-      }
-      if (name.startsWith("bankDetails.")) {
-        return {
-          ...prevData,
-          bankDetails: {
-            ...prevData.bankDetails,
-            [name.split(".")[1]]: value?.toUpperCase(),
-          },
-        };
-      }
-      // Handle workDetails fields
-      if (name.startsWith("workDetails.")) {
-        const field = name.split(".")[1];
-        const updatedWorkDetails = [...prevData.workDetails];
-        updatedWorkDetails[workDetailIndex!] = {
-          ...updatedWorkDetails[workDetailIndex!],
-          [field]:
-            field === "unitCost" || field === "quantity" || field === "value"
-              ? Number(value) || 0
-              : value?.toUpperCase(),
-        };
-        return {
-          ...prevData,
-          workDetails: updatedWorkDetails,
-        };
-      }
-      // Handle paymentStages fields
-      if (name.startsWith("paymentStages[")) {
-        const match = name.match(/paymentStages\[(\d+)\]\.(\w+)/);
-        if (match) {
-          const index = parseInt(match[1], 10);
-          const field = match[2];
-          const updatedPaymentStages = [...prevData.paymentStages];
-          updatedPaymentStages[index] = {
-            ...updatedPaymentStages[index],
-            [field]: value?.toUpperCase(),
+
+    handleChange = (e: any, workDetailIndex?: number) => {
+      const { name, value, checked, type } = e?.target;
+      const newValue = type === "checkbox" ? checked : value;
+
+      setFormData((prevData) => {
+        // Handle nested fields like billingTo, billingFrom, bankDetails
+        if (name.startsWith("billingTo.")) {
+          return {
+            ...prevData,
+            billingTo: {
+              ...prevData.billingTo,
+              [name.split(".")[1]]: value.toUpperCase(),
+            },
+          };
+        }
+        if (name.startsWith("billingFrom.")) {
+          return {
+            ...prevData,
+            billingFrom: {
+              ...prevData.billingFrom,
+              [name.split(".")[1]]: value.toUpperCase(),
+            },
+          };
+        }
+        if (name.startsWith("bankDetails.")) {
+          return {
+            ...prevData,
+            bankDetails: {
+              ...prevData.bankDetails,
+              [name.split(".")[1]]: value?.toUpperCase(),
+            },
+          };
+        }
+        // Handle workDetails fields
+        if (name.startsWith("workDetails.")) {
+          const field = name.split(".")[1];
+          const updatedWorkDetails = [...prevData.workDetails];
+          updatedWorkDetails[workDetailIndex!] = {
+            ...updatedWorkDetails[workDetailIndex!],
+            [field]:
+              field === "unitCost" || field === "quantity" || field === "value"
+                ? Number(value) || 0
+                : value?.toUpperCase(),
           };
           return {
             ...prevData,
-            paymentStages: updatedPaymentStages,
+            workDetails: updatedWorkDetails,
           };
         }
-      }
+        // Handle paymentStages fields
+        if (name.startsWith("paymentStages[")) {
+          const match = name.match(/paymentStages\[(\d+)\]\.(\w+)/);
+          if (match) {
+            const index = parseInt(match[1], 10);
+            const field = match[2];
+            const updatedPaymentStages = [...prevData.paymentStages];
+            updatedPaymentStages[index] = {
+              ...updatedPaymentStages[index],
+              [field]: value?.toUpperCase(),
+            };
+            return {
+              ...prevData,
+              paymentStages: updatedPaymentStages,
+            };
+          }
+        }
 
-      if (name === "isASAgentOnly") {
+        if (name === "isASAgentOnly") {
+          return {
+            ...prevData,
+            isASAgentOnly: newValue,
+          };
+        }
+        // Handle top-level fields
         return {
           ...prevData,
-          isASAgentOnly: newValue,
+          [name]: value?.toUpperCase(),
         };
-      }
-      // Handle top-level fields
-      return {
-        ...prevData,
-        [name]: value?.toUpperCase(),
-      };
-    });
-  };
+      });
+    };
 
   const handleAddWorkDetail = () => {
     setFormData((prevData) => ({
@@ -462,6 +462,17 @@ const InvoiceForm = ({ responseData }: any) => {
                 </div>}
             </div>
           </div>
+          <div>
+            <h3 className="font-bold mb-2">Second Address:</h3>
+            <input
+              type="text"
+              placeholder="Second Address"
+              name="billingTo.secondStreetAddress"
+              value={formData.billingTo.secondStreetAddress}
+              onChange={handleChange}
+              className="w-full p-2 mb-2 border border-gray-300 rounded"
+            />
+          </div>
 
           <div>
             <h3 className="font-bold mb-2">Billing To Address:</h3>
@@ -470,17 +481,6 @@ const InvoiceForm = ({ responseData }: any) => {
               placeholder="Street Address"
               name="billingTo.streetAddress"
               value={formData.billingTo.streetAddress}
-              onChange={handleChange}
-              className="w-full p-2 mb-2 border border-gray-300 rounded"
-            />
-          </div>
-          <div>
-            <h3 className="font-bold mb-2">Second Address:</h3>
-            <input
-              type="text"
-              placeholder="Second Address"
-              name="billingTo.secondStreetAddress"
-              value={formData.billingTo.secondStreetAddress}
               onChange={handleChange}
               className="w-full p-2 mb-2 border border-gray-300 rounded"
             />
