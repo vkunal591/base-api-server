@@ -111,17 +111,30 @@ export const handleDownloadPDF = async (formData: any) => {
     doc.setFont("helvetica", "400").text(`: ${formData.vesselName} (IMO ${formData.vesselImoNo})`, 40, 46);
 
     doc.setFont("helvetica", "semibold").text("TO", 20, 50);
-    doc.setFont("helvetica", "400").text(`: ${formData.to}`, 40, 50);
-    doc.setFont("helvetica", "semibold").text("ADD", 20, 54);
-    doc.setFont("helvetica", "400").text(`: ${formData?.billingTo?.secondStreetAddress}`, 40, 54);
+    let y = 50; // starting Y position
+    const lineHeight = 4; // spacing between lines
 
-    doc.setFont("helvetica", "semibold").text("C/O", 20, 58);
-    doc.setFont("helvetica", "400").text(`: ${formData.co}`, 40, 58);
+    // Helper function to print conditionally
+    function printIfData(label: string, value: string) {
+      if (value) {
+        doc.setFont("helvetica", "semibold").text(label, 20, y);
+        doc.setFont("helvetica", "400").text(`: ${value}`, 40, y);
+        y += lineHeight;
+      }
+    }
 
-    doc.setFont("helvetica", "semibold").text("ADD", 20, 62);
-    // const address =;
-    doc.text(':', 40, 62)
-    doc.text(doc.splitTextToSize(`${formData.billingTo.streetAddress}`, (maxWidth - 20)), 42, 62);
+    // Print each field conditionally
+    printIfData("TO", formData?.to);
+    printIfData("ADD", formData?.billingTo?.secondStreetAddress);
+    printIfData("C/O", formData?.co);
+
+    if (formData?.billingTo?.streetAddress) {
+      doc.setFont("helvetica", "semibold").text("ADD", 20, y);
+      const text = doc.splitTextToSize(formData.billingTo.streetAddress, maxWidth - 20);
+      doc.setFont("helvetica", "400").text(":", 40, y);
+      doc.text(text, 42, y);
+      y += lineHeight * text.length; // Adjust Y based on text wrapping
+    }
 
     // formData?.paymentNumber === "FINAL" ? doc.setFont("helvetica", "semibol").setFontSize(10).text(`${formData?.paymentNumber || "FINAL"} AGREEMENT & INVOICE (INVOICE NO: ${formData.invoiceNumber})`, 47, 73) : doc.setFont("helvetica", "semibol").setFontSize(10).text(`${formData?.paymentNumber || "1ST"} PAYMENT REQUEST & INVOICE (INVOICE NO: ${formData.invoiceNumber})`, 47, 68);
     // Center align text Heading number
@@ -144,14 +157,14 @@ export const handleDownloadPDF = async (formData: any) => {
     const centerX = (docWidth - textWidth) / 2;
 
     // Set Y position depending on the type
-    const posY = isFinal ? 73 : 68;
+    const posY = isFinal ? 73 : 73;
 
     // Draw the text
     doc.text(titleText, centerX, posY);
 
 
     //  End Center Align payment no 
-    formData?.paymentNumber === "FINAL" ? doc.setLineWidth(0.4).line(47, 75, 165, 75) : doc.setLineWidth(0.4).line(47, 70, 165, 70);
+    formData?.paymentNumber === "FINAL" ? doc.setLineWidth(0.4).line(47, 75, 165, 75) : doc.setLineWidth(0.4).line(47, 75, 165, 75);
 
     doc.setFont("helvetica", "400").setFontSize(10).text(`INV DATE: ${dayjs(formData.invoiceDate).format("DD MMM YYYY")}`, 150, 80);
     doc.text("DEAR SIR,", 20, 85);
