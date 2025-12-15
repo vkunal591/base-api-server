@@ -5,14 +5,14 @@ interface Props {
   onUpload: (files: FileList) => void;
 }
 
-export default function UploadForm({ onUpload }: Props) {
+export default function UploadForm() {
   const [loading, setLoading] = useState(false);
 
   async function handleUpload(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setLoading(true);
 
-    const input = e.currentTarget.querySelector('input[name="file"]') as HTMLInputElement;
+    const input: any = e.currentTarget.querySelector('input[name="file"]') as HTMLInputElement;
     const file = input?.files?.[0];
 
     if (!file) {
@@ -33,7 +33,7 @@ export default function UploadForm({ onUpload }: Props) {
       const data = await res.json();
       setLoading(false);
 
-      onUpload(input.files);
+      // onUpload(input.files);
       alert("Uploaded ✔ Filename: " + data.filename);
     } catch (err) {
       console.error(err);
