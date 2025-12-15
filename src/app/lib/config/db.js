@@ -20,7 +20,8 @@ const db = async () => {
   }
 
   try {
-    await mongoose.connect('mongodb+srv://vkunal591:vkunal591@cluster0.huymi.mongodb.net/sud?retryWrites=true&w=majority&appName=Cluster0');
+    // await mongoose.connect('mongodb+srv://vkunal591:vkunal591@cluster0.huymi.mongodb.net/sud?retryWrites=true&w=majority&appName=Cluster0');
+    await mongoose.connect('mongodb://localhost:27017/sud');
     console.log("DB connected");
   } catch (err) {
     console.error("DB connection error", err);

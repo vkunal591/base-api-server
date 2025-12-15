@@ -783,7 +783,7 @@ const InvoiceForm = ({ responseData }: any) => {
                 <IoDocument width={15} height={15} className="m-auto ml-2" />
               </button>
             </div>
-            <div className="mt-4 flex justify-end gap-2 hidden">
+            <div className="mt-4 flex justify-end gap-2">
               <button
                 className="p-2 bg-primary flex text-white rounded"
                 type="submit"

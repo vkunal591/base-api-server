@@ -56,6 +56,7 @@ export const userPermissions = [
       view: true,
       updateStatus: true,
       print: true,
+      updateInvoice: true,
     },
   },
   {

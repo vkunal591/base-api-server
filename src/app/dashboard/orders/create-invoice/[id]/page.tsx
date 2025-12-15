@@ -1,50 +1,71 @@
 "use client";
+
 import AuthGuard from "@/components/AuthGuard";
 import Wrapper from "@/components/common/Wrapper";
 import Header from "@/components/Header";
 import InvoiceForm from "@/components/invoice/InvoiceForm";
 import { usePathname } from "next/navigation";
-import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 
 const InvoicePage = () => {
   const pathname = usePathname();
   const [data, setData] = useState<any>();
   const [loading, setLoading] = useState(true);
-  const match = pathname.split("/")    //match(/\/create-invoice\/([a-f0-9]{24})/);
-  const id = match ? match[4] : null; // Extract the ID, or return null if not found
-console.log(id)
+
+  // ---------------------------------------
+  // Extract last URL segment
+  // ---------------------------------------
+  const segments = pathname.split("/");
+  let rawId = segments[segments.length - 1] || null;
+
+  // Identify if it's invoice-based ID (INV-xxxx)
+  const isInvoiceMode = rawId?.startsWith("INV-");
+
+  // Extract actual Mongo ID
+  let id = rawId?.replace("INV-", "") || null;
+
+  // Validate MongoDB ID
+  const isValidMongoId = /^[a-fA-F0-9]{24}$/.test(id || "");
+
   useEffect(() => {
     const fetchData = async () => {
-      if (id) {
-        try {
-          // Fetch the data using the id from the URL
-          const response = await fetch(`/api/ships/${id}`);
+      if (!id || !isValidMongoId) {
+        console.warn("Invalid or missing ID");
+        setLoading(false);
+        return;
+      }
 
-          if (!response.ok) {
-            throw new Error('Failed to fetch data');
-          }
+      try {
+        // ----------------------------------------
+        // FETCH CONDITIONS
+        // ----------------------------------------
+        const endpoint = isInvoiceMode
+          ? `/api/invoice/${id}` // If ID starts with INV-
+          : `/api/ships/${id}`;  // If normal ID
 
-          const res = await response.json(); // Parse the response as JSON
-          const { _id, ...rest } = res?.data?.result;; // Exclude _id
+        console.log("Fetching from:", endpoint);
 
-          // Update the state with the fetched data
-          setData((prevData: any) => ({
-            ...prevData,
-            ...rest,
-          }));
-        } catch (error) {
-          // Handle any errors
-          console.error("Error fetching post data:", error);
-        } finally {
-          setLoading(false); // Set loading to false once the request is finished
+        const response = await fetch(endpoint);
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch data");
         }
+
+        const res = await response.json();
+        const { _id, ...rest } = res?.data?.result || {};
+
+        // Set response data
+        setData(rest);
+
+      } catch (err) {
+        console.error("Error fetching data:", err);
+      } finally {
+        setLoading(false);
       }
     };
 
-    fetchData(); // Call the fetchData function
-
-  }, [id]); // Re-run the effect when the `id` changes
+    fetchData();
+  }, [id, isInvoiceMode]);
 
   if (loading) return <div>Loading...</div>;
 
@@ -54,14 +75,8 @@ console.log(id)
         <Header
           title="Invoice Create"
           breadcrumbItems={[
-            {
-              label: "Pages",
-              href: ""
-            },
-            {
-              label: "Invoice Create",
-              href: ""
-            }
+            { label: "Pages", href: "" },
+            { label: "Invoice Create", href: "" },
           ]}
         />
 

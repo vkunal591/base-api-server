@@ -1,4 +1,4 @@
-import { SiGoogleadmob } from "react-icons/si";
+import { SiFiles, SiGoogleadmob } from "react-icons/si";
 import { GiBoxUnpacking } from "react-icons/gi";
 import { BsChatQuoteFill } from "react-icons/bs";
 import { FaHome, FaBarcode, FaShip } from "react-icons/fa";
@@ -195,11 +195,11 @@ export const tabs = [
   },
   {
     id: 9,
-    icon: BiSolidPurchaseTagAlt,
-    label: "Manage Purchase",
-    pageTitle: "All Purchase",
-    href: "/dashboard/purchase",
-    permission: "Manage Purchase",
+    icon: SiFiles,
+    label: "Manage Files",
+    pageTitle: "All Files",
+    href: "/dashboard/files",
+    permission: "Manage Files",
   },
   {
     id: 10,

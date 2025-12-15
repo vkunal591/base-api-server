@@ -15,6 +15,7 @@ import UpdateInvoiceForm from "@/components/crud/UpdateInvoiceForm";
 import { GrUpdate } from "react-icons/gr";
 import { handleDownloadPDF } from "@/hooks/pdfFormat";
 import dayjs from "dayjs";
+import { FaFilePen } from "react-icons/fa6";
 
 interface RowData {
   _id: string;
@@ -30,6 +31,7 @@ interface OperationsAllowed {
   invoice?: boolean;
   updateStatus?: boolean;
   print?: boolean;
+  updateInvoice?: boolean;
 }
 
 interface ActionsProps {
@@ -61,10 +63,10 @@ const Actions: React.FC<ActionsProps> = ({
 
   const handleEdit = async (id?: string) => {
     if (!id) return;
-    
+
     try {
       const endpoint = endpoints[type]?.read;
-      
+
       console.log(endpoint)
       if (!endpoint) return;
 
@@ -92,18 +94,18 @@ const Actions: React.FC<ActionsProps> = ({
   const notificationRange =
     type === "Notifications"
       ? `?dueDateFrom=${dayjs(currentData).format(
-          "YYYY-MM-DD"
-        )}&dueDateTo=${dayjs(currentData)
-          .add(4, "day")
-          .format("YYYY-MM-DD")}&status=Unpaid`
+        "YYYY-MM-DD"
+      )}&dueDateTo=${dayjs(currentData)
+        .add(4, "day")
+        .format("YYYY-MM-DD")}&status=Unpaid`
       : "";
   const yardNotificationRange =
     type === "Notifications"
       ? `?yardPaymentDueDateFrom=${dayjs(currentData).format(
-          "YYYY-MM-DD"
-        )}&yardPaymentDueDateTo=${dayjs(currentData)
-          .add(5, "day")
-          .format("YYYY-MM-DD")}&status=Unpaid`
+        "YYYY-MM-DD"
+      )}&yardPaymentDueDateTo=${dayjs(currentData)
+        .add(5, "day")
+        .format("YYYY-MM-DD")}&status=Unpaid`
       : "";
 
   const handleDelete = async (id: string) => {
@@ -114,11 +116,10 @@ const Actions: React.FC<ActionsProps> = ({
       if (!showDeleteModal) return setShowDeleteModal(true);
 
       const deleteEndpoint = endpoints[type]?.delete;
-      const fetchEndpoint = `${endpoints[type]?.fetchAll}${
-        pathname === "/dashboard/notifications"
-          ? notificationRange
-          : yardNotificationRange
-      }`;
+      const fetchEndpoint = `${endpoints[type]?.fetchAll}${pathname === "/dashboard/notifications"
+        ? notificationRange
+        : yardNotificationRange
+        }`;
 
       if (deleteEndpoint && fetchEndpoint) {
         await Delete(`${deleteEndpoint}${id}`);
@@ -201,6 +202,15 @@ const Actions: React.FC<ActionsProps> = ({
           className="text-green-700 ml-1 text-xl hover:scale-125 hover:p-1 hover:bg-green-100 p-1 rounded transition"
         >
           <FaFileInvoiceDollar title="Generate Invoice" />
+        </button>
+      )}
+
+      {operationsAllowed?.updateInvoice && (
+        <button
+          onClick={() => handleInvoice(`INV-${row._id}`)}
+          className="text-green-700 ml-1 text-xl hover:scale-125 hover:p-1 hover:bg-green-100 p-1 rounded transition"
+        >
+          <FaFilePen title="Update Invoice" />
         </button>
       )}
 
