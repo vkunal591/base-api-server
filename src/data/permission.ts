@@ -35,6 +35,7 @@ export const userPermissions = [
       create: true,
       invoice: true,
       delete: true,
+      upload: true
     },
   },
   {

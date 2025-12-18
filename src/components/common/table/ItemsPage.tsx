@@ -14,7 +14,7 @@ const ItemsPage: React.FC<ItemsPageProps> = ({
   fetchFilteredData,
 }) => {
   return (
-    <div className="flex flex-col gap-1">
+    <div className="flex flex-row gap-1">
       <label className="text-iconBlack font-medium">Page:</label>
       <select
         value={paginate.itemsPerPage}

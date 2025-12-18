@@ -1,4 +1,4 @@
-import { FaFilter } from "react-icons/fa";
+import { FaFileUpload, FaFilter } from "react-icons/fa";
 import { debounce } from "@/hooks/general";
 import GenerateExcelButton from "../GenerateExcel";
 
@@ -8,6 +8,7 @@ interface HeaderProps {
   filteredData: any[];
   handleReset: () => void;
   handleAdd: () => void;
+  handleCSVUpload?: () => void;
   operationsAllowed: {
     create?: boolean;
     [key: string]: boolean | undefined;
@@ -21,6 +22,7 @@ const Header: React.FC<HeaderProps> = ({
   handleReset,
   filteredData,
   operationsAllowed,
+  handleCSVUpload,
 }) => {
   return (
     <div className="flex bg-whiteBg p-5 rounded-2xl justify-between items-center">
@@ -40,7 +42,7 @@ const Header: React.FC<HeaderProps> = ({
           onClick={debounce(handleReset, 1000)}
           className="bg-secondary text-white flex gap-2 justify-center items-center outline-none px-4 text-lg py-2 rounded-xl active:bg-gray-500"
         >
-         Reload <FaFilter className="text-sm" />
+          Reload <FaFilter className="text-sm" />
         </button>
 
         {/* Add Button */}
@@ -52,6 +54,18 @@ const Header: React.FC<HeaderProps> = ({
           >
             Add {type}
             <sup>+</sup>
+          </button>
+        )}
+        {/* Upload Button */}
+        {operationsAllowed?.upload && (
+          <button
+            type="button"
+            onClick={handleCSVUpload}
+            className="bg-green-500 flex items-center justify-center gap-1 text-white px-4 py-1 rounded-xl"
+            // className="bg-green-500  text-white px-4 py-2 flex items-center justify-center gap-1 w-full h-fit rounded-md"
+
+          >
+            <FaFileUpload /> CSV
           </button>
         )}
       </div>

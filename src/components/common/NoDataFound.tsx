@@ -1,11 +1,12 @@
 import Image from "next/image";
 import { debounce } from "@/hooks/general";
-import { FaFilter } from "react-icons/fa";
+import { FaFileUpload, FaFilter } from "react-icons/fa";
 
 interface NoDataFoundProps {
   type: string;
   handleAdd: () => void;
   handleReset: () => void;
+  handleCSVUpload: () => void;
   operationsAllowed: {
     create?: boolean;
     [key: string]: boolean | undefined;
@@ -16,9 +17,10 @@ const NoDataFound: React.FC<NoDataFoundProps> = ({
   type,
   handleAdd,
   handleReset,
+  handleCSVUpload,
   operationsAllowed,
 }) => {
-  console.log(operationsAllowed,"ghvhyhjg")
+  console.log(operationsAllowed, "ghvhyhjg")
   return (
     <div className="flex gap-5 justify-between font-semibold">
       {/* Image Section */}
@@ -55,6 +57,17 @@ const NoDataFound: React.FC<NoDataFoundProps> = ({
           >
             Add&nbsp;{type}
             <sup>+</sup>
+          </button>
+        )}
+
+        {/* Upload Button */}
+        {operationsAllowed?.upload && (
+          <button
+            type="button"
+            onClick={handleCSVUpload}
+            className="bg-green-500  text-white px-4 py-2 flex items-center justify-center gap-1 w-full h-fit rounded-md"
+          >
+            <FaFileUpload /> CSV
           </button>
         )}
       </div>

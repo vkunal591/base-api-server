@@ -42,7 +42,7 @@ export default function UploadForm() {
     }
   }
 
-  return (
+  return ( 
     <form onSubmit={handleUpload} className="p-4 border rounded">
       <input type="file" name="file" required />
       <button

@@ -13,6 +13,7 @@ import { endpoints } from "@/data/endpoints";
 import React, { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import { usePathname } from "next/navigation";
+import UploadCSVData from "../crud/UploadCSVData";
 
 interface TableColumn {
   key: string;
@@ -71,6 +72,7 @@ const TableComponent = <T extends { [key: string]: any }>({
   const [selectedField, setSelectedField] = useState("");
   const [formConfig, setFormConfig] = useState<any>("");
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
+  const [isUploadModalVisible, setIsUploadModalVisible] = useState<boolean>(false);
   const [filteredData, setFilteredData] = useState<Array<T>>(data ?? []);
   const path = usePathname();
 
@@ -220,17 +222,29 @@ const TableComponent = <T extends { [key: string]: any }>({
     } else document.body.style.overflow = "scroll";
   }, [isModalVisible]);
 
+  useEffect(() => {
+    if (isUploadModalVisible) {
+      document.body.style.overflow = "hidden"; // prevent overflow
+    } else document.body.style.overflow = "scroll";
+  }, [isUploadModalVisible]);
   const handleAdd = () => {
     setData({ name });
     setIsModalVisible(true);
   };
 
-  if (filteredData.length === 0 && !isModalVisible)
+  const handleCSVUpload = () => {
+    console.log('uplaod')
+    setIsUploadModalVisible(true);
+
+  }
+
+  if (filteredData.length === 0 && !isModalVisible && !isUploadModalVisible)
     return (
       <NoDataFound
         type={type}
         handleAdd={handleAdd}
         handleReset={handleReset}
+        handleCSVUpload={handleCSVUpload}
         operationsAllowed={operationsAllowed}
       />
     );
@@ -256,6 +270,25 @@ const TableComponent = <T extends { [key: string]: any }>({
         )}
       </Modal>
 
+      {/* Modals */}
+      <Modal
+        formtype={
+          "Upload CSV File"
+        }
+        isVisible={isUploadModalVisible}
+        onClose={() => setIsUploadModalVisible(!isUploadModalVisible)}
+      >
+        {type && formData && (
+          <UploadCSVData
+            // data={formData}
+            setPaginate={setPaginate}
+            onClose={() => setIsUploadModalVisible(!isUploadModalVisible)}
+            setFilteredData={setFilteredData}
+            formType={formConfig ? formConfig : type}
+          />
+        )}
+      </Modal>
+
       {/* Header */}
       <Header
         type={type}
@@ -263,6 +296,7 @@ const TableComponent = <T extends { [key: string]: any }>({
         handleAdd={handleAdd}
         handleReset={handleReset}
         filteredData={filteredData}
+        handleCSVUpload={handleCSVUpload}
         operationsAllowed={operationsAllowed}
       />
 

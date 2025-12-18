@@ -51,6 +51,7 @@ const Sidebar: React.FC = () => {
         invoice: true,
         write: true,
         delete: true,
+        upload: true
       },
     },
     {
