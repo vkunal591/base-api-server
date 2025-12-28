@@ -9,7 +9,8 @@ import { useRouter } from "next/navigation";
 import dayjs from "dayjs";
 import mongoose from "mongoose";
 
-const InvoiceForm = ({ responseData }: any) => {
+const InvoiceForm = ({ responseData,updateId }: any) => {
+  console.log(dayjs(responseData?.dueDate).format("YYYY-MM-DD"),updateId)
   const router = useRouter();
   const [submitting, setSubmitting] = useState(false);
   const [formData, setFormData] = useState({
@@ -129,10 +130,24 @@ const InvoiceForm = ({ responseData }: any) => {
         payBy: "",
         paymentDate: "",
       },
-    ],
+    ]?.map(stage => {
+  const match = responseData?.paymentStages?.find((item:any) => item.key === stage.key);
+  if (match) {
+    return {
+      ...stage,
+      ...match,
+      // Format paymentDate for date input
+      paymentDate: match.paymentDate
+        ? dayjs(match.paymentDate).format("YYYY-MM-DD")
+        : ""
+    };
+  }
+  return stage;
+}),
   });
 
   useEffect(() => {
+    console.log(responseData)
     if (responseData) {
       setFormData((prevData) => ({
         ...prevData,
@@ -142,7 +157,8 @@ const InvoiceForm = ({ responseData }: any) => {
         bankDetails: { ...prevData?.bankDetails, ...responseData?.bankDetails },
         workDetails: responseData?.workDetails || prevData?.workDetails,
         isASAgentOnly: responseData?.isASAgentOnly || prevData?.isASAgentOnly,
-        paymentStages: prevData?.paymentStages.map((stage, index) => ({
+        paymentStages: prevData?.paymentStages.map((stage, index) => {console.log(stage);
+           return({
           ...stage,
           payment:
             index === 0
@@ -168,15 +184,12 @@ const InvoiceForm = ({ responseData }: any) => {
                                 : index === 10
                                   ? responseData?.bankDetails?.accountName || stage?.payment
                                   : stage?.payment,
-        })),
+        })}),
       }));
     }
   }, [responseData]);
 
-  const
-
-
-    handleChange = (e: any, workDetailIndex?: number) => {
+  const handleChange = (e: any, workDetailIndex?: number) => {
       const { name, value, checked, type } = e?.target;
       const newValue = type === "checkbox" ? checked : value;
 
@@ -278,21 +291,22 @@ const InvoiceForm = ({ responseData }: any) => {
     e.preventDefault();
     try {
       setSubmitting(true);
-      const response = await fetch("/api/invoice", {
-        method: "POST",
+      const url = updateId ?`/api/invoice/${updateId}`:"/api/invoice"
+      const response = await fetch(url, {
+        method: updateId?"PUT":"POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
       });
 
-      const responseData = await response.json();
+      const resData = await response.json();
       if (response.ok) {
-        toast.success("Invoice Created");
+        toast.success(resData?.message ||"Invoice Created");
         const fetchUrl = `/api/invoice?page=1&limit=10`;
         const resp = await fetch(fetchUrl);
         const data = await resp.json();
         router.push("/dashboard/billing");
       } else {
-        toast.error(responseData?.message || "Something went wrong! Please check invoice number");
+        toast.error(resData?.message || "Something went wrong! Please check invoice number");
       }
     } catch (error: any) {
       console.error("Error: ", error);
@@ -403,7 +417,7 @@ const InvoiceForm = ({ responseData }: any) => {
                   className="w-3/4 text-primary outline text-sm outline-gray-100 px-4 py-1 placeholder:text-gray-400 bg-white rounded"
                   type="date"
                   name="invoiceDate"
-                  value={formData.invoiceDate}
+                  value={dayjs(formData.invoiceDate).format("YYYY-MM-DD")}
                   onChange={handleChange}
                 />
               </div>
@@ -691,7 +705,7 @@ const InvoiceForm = ({ responseData }: any) => {
                 className="lg:w-2/4 text-primary outline text-sm outline-gray-100 px-4 py-2 placeholder:text-gray-400 bg-white rounded"
                 type="date"
                 name="dueDate"
-                value={formData.dueDate}
+                value={dayjs(formData.dueDate).format("YYYY-MM-DD")}
                 onChange={handleChange}
               />
             </div>
@@ -772,7 +786,7 @@ const InvoiceForm = ({ responseData }: any) => {
           )}
 
 
-          <div className="lg:flex lg:justify-between">
+          <div className="lg:flex lg:justify-between gap-2">
             <div className="flex space-x-4 mt-4 ml-auto">
               <button
                 className="bg-primary flex text-white px-4 py-2 rounded-md hover:bg-blue-600"

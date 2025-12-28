@@ -64,7 +64,7 @@ export async function PUT(req, { params }) {
   if (!updatedInvoice)
     return NextResponse.json({ error: "Invoice not found" }, { status: 404 });
 
-  return NextResponse.json({ data: { updatedInvoice }, success: true });
+  return NextResponse.json({ data: { updatedInvoice }, success: true ,message:"Invoice updated successfully"});
 }
 
 

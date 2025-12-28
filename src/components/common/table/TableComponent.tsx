@@ -36,6 +36,22 @@ interface TableProps {
   setIsModalVisible: (isVisible: boolean) => void;
 }
 
+
+const getStatusClass = (status:any) => {
+  switch (status) {
+    case "Paid":
+      return "bg-green-50 text-green-600";
+    case "Pending":
+      return "bg-yellow-50 text-yellow-600";
+    case "Unpaid":
+      return "bg-red-50 text-red-600";
+    case "Overdue":
+      return "bg-red-100 text-red-700";
+    default:
+      return "bg-gray-50 text-gray-600";
+  }
+};
+
 const Table: React.FC<TableProps> = ({
   sort,
   type,
@@ -198,10 +214,8 @@ const Table: React.FC<TableProps> = ({
                   >
                     {col.status ? (
                       <span
-                        className={`flex justify-center items-center rounded-md ${formatRowValue(row, col) === "true"
-                          ? "bg-green-50 text-green-600"
-                          : "bg-red-50 text-info-600"
-                          } px-2 py-1 text-xs font-medium text-gray-600 ring-1 ring-gray-500/10 ring-inset`}
+                      className={`flex justify-center items-center rounded-md ${getStatusClass(formatRowValue(row, col))} px-2 py-1 text-xs font-medium ring-1 ring-gray-500/10 ring-inset`}
+
                       >
                         {formatRowValue(row, col)}
                       </span>

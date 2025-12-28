@@ -345,7 +345,7 @@ export async function POST(req) {
     await newInvoice.save();
 
     return NextResponse.json(
-      { data: { result: newInvoice, success: true } },
+      { data: { result: newInvoice, success: true ,message:"Invoice Created Successfully"} },
       { status: 201 }
     );
   } catch (error) {

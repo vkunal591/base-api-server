@@ -80,7 +80,7 @@ const InvoicePage = () => {
           ]}
         />
 
-        <InvoiceForm responseData={data} />
+        <InvoiceForm responseData={data} updateId={isInvoiceMode ?id:null} />
       </Wrapper>
     </AuthGuard>
   );
