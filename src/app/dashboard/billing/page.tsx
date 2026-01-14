@@ -47,12 +47,12 @@ const filterOptions = [
 ];
 
 const Users: React.FC = () => {
-  const { data, loading, error } = useFetch(endpoints["Billing"].fetchAll);
+  const { data, loading, error } = useFetch(endpoints["Invoice"].fetchAll);
   const updatedData = data?.data?.result;
   const paginationData = data?.data?.pagination;
 
   const { user } = useAuth();
-  const operationsAllowed = getAccessPoints(user, "Manage Billing");
+  const operationsAllowed = getAccessPoints(user, "Manage Invoice");
 
   if (loading && !updatedData && !error) return <Loader />;
 
@@ -60,7 +60,7 @@ const Users: React.FC = () => {
     <AuthGuard>
       <Wrapper>
         <TableComponent
-          type="Billing"
+          type="Invoice"
           suffix=""
           columns={columns}
           data={updatedData}

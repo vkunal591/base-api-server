@@ -25,7 +25,7 @@ export const endpoints: Record<
     fetchAll: "api/brand", // to fetch all brands
     operations: operations,
   },
-  Billing: {
+  Invoice: {
     create: "api/invoice", // to create a product
     read: "api/invoice/", // to get a product
     update: `api/invoice/`, // to update a product

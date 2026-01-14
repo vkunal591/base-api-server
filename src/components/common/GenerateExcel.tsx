@@ -31,7 +31,7 @@ const GenerateExcelButton = ({ data }: { data: any }) => {
         onClick={handleGenerateExcel}
         className="bg-secondary px-4 rounded-xl text-white"
       >
-        Download CSV
+        Download Excel Formate 
       </button>
     </div>
   );

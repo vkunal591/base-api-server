@@ -21,7 +21,6 @@ const InvoicePage = () => {
             },
           ]}
         />
-
         <InvoiceForm responseData={null} />
       </Wrapper>
     </AuthGuard>

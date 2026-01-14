@@ -42,7 +42,7 @@ const Header: React.FC<HeaderProps> = ({
           onClick={debounce(handleReset, 1000)}
           className="bg-secondary text-white flex gap-2 justify-center items-center outline-none px-4 text-lg py-2 rounded-xl active:bg-gray-500"
         >
-          Reload <FaFilter className="text-sm" />
+          Refresh <FaFilter className="text-sm" />
         </button>
 
         {/* Add Button */}
@@ -65,7 +65,7 @@ const Header: React.FC<HeaderProps> = ({
             // className="bg-green-500  text-white px-4 py-2 flex items-center justify-center gap-1 w-full h-fit rounded-md"
 
           >
-            <FaFileUpload /> CSV
+            <FaFileUpload /> Upload Excel
           </button>
         )}
       </div>

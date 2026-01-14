@@ -29,7 +29,7 @@ const FormRenderer: React.FC<FormRendererProps> = (props: any) => {
   switch (props.formType) {
     case "Employee":
       return <UserForm {...props} />;
-    case "Billing":
+    case "Invoice":
       return <ViewInvoiceForm {...props} />;
     case "Packing":
       return <Packingform {...props} />;

@@ -160,7 +160,7 @@ const Table: React.FC<TableProps> = ({
   };
 
   return (<div className="overflow-x-scroll no-scrollbar">
-    <div className="overflow-y-auto no-scrollbar" style={{ maxHeight: '70vh' }}>
+    <div className="overflow-y-auto no-scrollba" style={{ maxHeight: '70vh' }}>
       <table className="min-w-full bg-white text-center">
         <thead className="sticky top-0 bg-white z-10">
           <tr className="whitespace-nowrap">

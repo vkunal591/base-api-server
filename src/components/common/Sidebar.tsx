@@ -34,7 +34,7 @@ const Sidebar: React.FC = () => {
     },
 
     {
-      module: "Manage Billing",
+      module: "Manage Invoice",
       access: {
         read: true,
         write: true,
@@ -48,7 +48,7 @@ const Sidebar: React.FC = () => {
       access: {
         read: true,
         create: true,
-        invoice: true,
+        // invoice: true,
         write: true,
         delete: true,
         upload: true

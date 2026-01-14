@@ -67,7 +67,7 @@ const NoDataFound: React.FC<NoDataFoundProps> = ({
             onClick={handleCSVUpload}
             className="bg-green-500  text-white px-4 py-2 flex items-center justify-center gap-1 w-full h-fit rounded-md"
           >
-            <FaFileUpload /> CSV
+            <FaFileUpload /> Upload xl
           </button>
         )}
       </div>
