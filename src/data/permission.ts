@@ -32,7 +32,7 @@ export const userPermissions = [
     access: {
       read: true,
       update: true,
-      create: true,
+      // create: true,  
       invoice: true,
       delete: true,
       upload: true

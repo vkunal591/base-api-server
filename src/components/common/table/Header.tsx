@@ -1,6 +1,7 @@
 import { FaFileUpload, FaFilter } from "react-icons/fa";
 import { debounce } from "@/hooks/general";
 import GenerateExcelButton from "../GenerateExcel";
+import Link from "next/link";
 
 interface HeaderProps {
   type: string;
@@ -46,15 +47,22 @@ const Header: React.FC<HeaderProps> = ({
         </button>
 
         {/* Add Button */}
-        {operationsAllowed?.create && (
-          <button
+        {operationsAllowed?.create && (type==="Invoice"?
+         ( <Link
+            href={"/dashboard/orders/create-invoice"}
+            className="bg-secondary text-white px-4 py-2.5 rounded-xl"
+          >
+            Add {type}
+            <sup>+</sup>
+          </Link>):
+       (<button
             type="button"
             onClick={handleAdd}
             className="bg-secondary text-white px-4 py-1 rounded-xl"
           >
             Add {type}
             <sup>+</sup>
-          </button>
+          </button>)
         )}
         {/* Upload Button */}
         {operationsAllowed?.upload && (

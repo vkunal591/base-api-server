@@ -1,27 +1,25 @@
-import { NextResponse } from 'next/server';
-import { dbConnect } from '../../lib/config/db';
-import InvoiceModel from '../../lib/models/InvoiceModel';
-import NotificationModel from '../../lib/models/NotificationModel';
-import nodemailer from 'nodemailer';  // Email sender (example using nodemailer)
+import { NextResponse } from "next/server";
+import { dbConnect } from "../../lib/config/db";
+import InvoiceModel from "../../lib/models/InvoiceModel";
+import NotificationModel from "../../lib/models/NotificationModel";
+import CompanyModel from "../../lib/models/CompanyModel";
+import nodemailer from "nodemailer";
 
-// Helper function to send email alerts
 async function sendEmailAlert(companyEmail, alertMessage) {
   const transporter = nodemailer.createTransport({
-    service: 'gmail', // Use your email service provider
+    service: "gmail",
     auth: {
       user: process.env.EMAIL_USER,
       pass: process.env.EMAIL_PASS,
     },
   });
 
-  const mailOptions = {
+  return transporter.sendMail({
     from: process.env.EMAIL_USER,
     to: companyEmail,
-    subject: 'Invoice Due Date Alert',
+    subject: "Invoice Due Date Alert",
     text: alertMessage,
-  };
-
-  return transporter.sendMail(mailOptions);
+  });
 }
 
 export async function POST(req) {
@@ -30,34 +28,47 @@ export async function POST(req) {
   try {
     const notifications = await NotificationModel.find({ isEnabled: true });
 
+    const now = new Date(); 
+
     for (const notification of notifications) {
-      // Find invoices for the company
       const invoices = await InvoiceModel.find({
         company: notification.company,
-        dueDate: { $lte: new Date() }, // Invoices that are overdue
-        status: { $in: ['Unpaid', 'Pending'] }
+        dueDate: { $gte: now },
+        status: { $in: ["Unpaid", "Pending"] },
+        reminderSent: { $ne: true },
       });
 
       for (const invoice of invoices) {
-        // Check if the invoice is due in the specified number of days
-        const daysBeforeDue = Math.ceil((invoice.dueDate - new Date()) / (1000 * 3600 * 24));
+        const daysBeforeDue = Math.ceil(
+          (invoice.dueDate - now) / (1000 * 60 * 60 * 24)
+        );
 
-        if (daysBeforeDue <= notification.daysBeforeDue && daysBeforeDue >= 0) {
-          // Send alert email
+        if (
+          daysBeforeDue === notification.daysBeforeDue && 
+          daysBeforeDue >= 0
+        ) {
           const company = await CompanyModel.findById(notification.company);
+
           await sendEmailAlert(company.email, notification.alertMessage);
 
-          // Log the notification
+          //  PREVENT DUPLICATE EMAILS
+          await InvoiceModel.findByIdAndUpdate(invoice._id, {
+            reminderSent: true,
+          });
+
           await NotificationModel.findByIdAndUpdate(notification._id, {
-            $push: { notificationsSent: { status: 'Sent' } },
+            $push: { notificationsSent: { status: "Sent", date: new Date() } },
           });
         }
       }
     }
 
-    return NextResponse.json({ message: 'Notifications checked and sent successfully' });
+    return NextResponse.json({ message: "Notifications sent successfully" });
   } catch (error) {
     console.error(error);
-    return NextResponse.json({ message: 'Error checking and sending notifications' }, { status: 500 });
+    return NextResponse.json(
+      { message: "Error sending notifications" },
+      { status: 500 }
+    );
   }
 }

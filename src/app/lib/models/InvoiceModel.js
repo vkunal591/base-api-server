@@ -318,7 +318,10 @@ const InvoiceSchema = new mongoose.Schema(
       enum: ["Paid", "Pending", "Unpaid", "Overdue"],
       default: "Unpaid",
     },
-
+    reminderSent: {
+      type: Boolean,
+      default: false,
+    },
     invoiceDate: Date,
     vesselName: String,
     vesselImoNo: String,

@@ -8,6 +8,7 @@ import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import dayjs from "dayjs";
 import mongoose from "mongoose";
+import { endpoints } from "@/data/endpoints";
 
 const InvoiceForm = ({ responseData,updateId }: any) => {
   console.log(dayjs(responseData?.dueDate).format("YYYY-MM-DD"),updateId)
@@ -287,6 +288,43 @@ const InvoiceForm = ({ responseData,updateId }: any) => {
     }));
   };
 
+  const handleShipSubmit = async () => {
+const payload = {
+  vesselImoNo:formData.vesselImoNo,
+  vesselName:formData.vesselName,
+  invoiceNumber:formData.invoiceNumber,
+  companyName:formData.to,
+  sudInvoiceToOwners:formData.totalAmount,
+  dueDate:formData.dueDate,
+}
+
+
+
+
+    try {
+      setSubmitting(true);
+            let url = "";
+            if (updateId) url = `/api/ships${updateId}`;
+            else url = `/api/ships`;
+          const response = await fetch(url, {
+            method: updateId?"PUT":"POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload),
+          });
+
+      const resData = await response.json();
+      if (response.ok) {
+        toast.success(resData?.message ||"Ship Created");
+      } else {
+        toast.error(resData?.message || "Something went wrong! Please check invoice number");
+      }
+    } catch (error: any) {
+      console.error("Error: ", error);
+      toast.error(error?.message || "Something went wrong!");
+    } finally {
+      setSubmitting(false);
+    }
+  };
   const handleSubmit = async (e: any) => {
     e.preventDefault();
     try {
@@ -301,6 +339,7 @@ const InvoiceForm = ({ responseData,updateId }: any) => {
       const resData = await response.json();
       if (response.ok) {
         toast.success(resData?.message ||"Invoice Created");
+        await handleShipSubmit()
         const fetchUrl = `/api/invoice?page=1&limit=10`;
         const resp = await fetch(fetchUrl);
         const data = await resp.json();

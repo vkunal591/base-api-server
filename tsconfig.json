@@ -26,6 +26,6 @@
       "@/*": ["src/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/app/lib/models/ShipModel.js", "src/app/api/file/[id]/route.js", "src/app/api/download/route.js"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/app/lib/models/ShipModel.js", "src/app/api/file/[id]/route.js", "src/app/api/download/route.js", "src/app/lib/config/invoiceReminderCron.js"],
   "exclude": ["node_modules"]
 }

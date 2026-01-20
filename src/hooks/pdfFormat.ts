@@ -397,16 +397,24 @@ PARTIES.`, maxWidth), 20, 128) : "";
     };
 
 
-    const drawTable = (doc: any, items: any) => {
-      const startX = 5;
-      const endX = 205;
-      const startY = 120;
-      const rowHeight = 10;
-      const columnX = [15, 115, 135, 155, 180];
+// Extra Table for port only
+let dynamicLength = 0
+    let itemLength = formData.workDetails.length
+console.log(itemLength)
 
-      const totalRows = items.length;
 
-      // Top border
+
+const drawTable = (doc: any, items: any,page:any) => {
+  const startY = page?20:120;
+  const startX = page?5:5;
+  const endX = page?205:205;
+  const rowHeight = page?10:10;
+  const columnX = [15, 115, 135, 155, 180];
+  const pageHeight = 287; // approx A4 page height in jsPDF
+  let currentY = startY;
+  
+  // Top border
+  const totalRows = items.length;
       doc.setLineWidth(0.4).line(startX, startY, endX, startY);
 
       // Vertical lines
@@ -417,6 +425,7 @@ PARTIES.`, maxWidth), 20, 128) : "";
       // Horizontal lines
       for (let i = 1; i <= totalRows; i++) {
         const y = startY + i * rowHeight;
+        dynamicLength = startY + i * rowHeight;
         doc.setLineWidth(0.4).line(startX, y, endX, y);
       }
 
@@ -430,37 +439,45 @@ PARTIES.`, maxWidth), 20, 128) : "";
         const quantity = parseFloat(item.quantity) || 0;
         const amount = unitCost * quantity;
         totalAmount += amount;
-
+ 
+        if (currentY + rowHeight > pageHeight) {
+        doc.addPage();
+        currentY = startY;
+        }
         doc.setFontSize(9);
-        doc.text(`${i + 1}`, 7, y);
+        doc.text(`${page?17+i:i + 1}`, 7, y);
         doc.text(doc.splitTextToSize(`${item.itemDesc}` || '', (maxWidth - 75)), 17, y);
         doc.text(item.unit || '', 117, y);
         doc.text(item.unitCost.toLocaleString('en-US'), 137, y);
         doc.text(item.quantity.toString(), 157, y);
         doc.text(amount.toLocaleString('en-US'), 182, y);
+        // currentY += rowHeight;
+
       }
 
-      // Total row
-      // const totalY = startY + totalRows * rowHeight + 7;
-      // doc.setFontSize(9);
-      // doc.text("TOTAL", 117, totalY);
-      // doc.text(formatAmountWithCommas(totalAmount), 182, totalY);
-      doc.setLineWidth(0.4).line(startX, 217, endX, startY + (totalRows * rowHeight));
-
+ 
+      { doc.setLineWidth(0.4).line(startX, totalRows>=10?280:217, endX, startY + (totalRows * rowHeight));}
+      {page && doc.setLineWidth(0.4).line(startX, 217, endX, startY + (totalRows * rowHeight));}
+      
     };
+    
+    
+    drawTable(doc, formData?.workDetails.slice(1,17),false);
+    
+    doc.setLineWidth(0.6).line(205, 15, 205, 280);
+    doc.setLineWidth(0.6).line(5, 280, 205, 280);
+    if(itemLength >10){doc.addPage()
+      drawTable(doc, formData?.workDetails.slice(17,40),true);
+      doc.setLineWidth(0.6).line(5, 15, 205, 15);
+      doc.setLineWidth(0.6).line(5, 15, 5, 280);
+      doc.setLineWidth(0.6).line(205, 15, 205, 280);
+      doc.setLineWidth(0.6).line(5, 280, 205, 280);
+      // {dynamicLength>217 && doc.setLineWidth(0.4).line(startX, 280, endX, startY + (dynamicLength * rowHeight));}
 
+    }
+console.log(dynamicLength)
 
-    const items = [
-      { itemDesc: 'Gold Necklace', unit: 'pcs', unitCost: '1200', quantity: '2' },
-      { itemDesc: 'Earrings', unit: 'pair', unitCost: '500', quantity: '1' },
-      { itemDesc: 'Bracelet', unit: 'pcs', unitCost: '700', quantity: '3' },
-    ];
-
-    drawTable(doc, formData?.workDetails);
-
-
-
-
+// From here shift according to increase length of itemLength more than 10 then shift below content to next page wi
     doc.setLineWidth(0.4).line(5, 217, 205, 217);
     doc.setLineWidth(0.4).line(5, 218, 205, 218);
     doc.setLineWidth(0.4).line(170, 218, 170, 227);
@@ -516,3 +533,46 @@ PARTIES.`, maxWidth), 20, 128) : "";
   }
   window.open(doc.output("bloburl"), "_blank");
 };
+
+
+
+  // doc.setLineWidth(0.4).line(5, dynamicLength, 205, dynamicLength);
+  //   doc.setLineWidth(0.4).line(5, dynamicLength+1, 205, dynamicLength+1);
+  //   doc.setLineWidth(0.4).line(170, dynamicLength+1, 170, dynamicLength+9);
+  //   // Total Invoice amount (USD)
+  //   doc.setFontSize(18).text(doc.splitTextToSize(`Total Invoice amount (USD)`, (maxWidth - 70)), 7, dynamicLength+7);
+  //   doc.setFontSize(14).text(doc.splitTextToSize(`${formatAmountWithCommas(totalAmount)}`, (maxWidth - 135)), 174, dynamicLength+7);
+
+
+
+  //   doc.setLineWidth(0.4).line(5, dynamicLength+9, 205, dynamicLength+9);
+  //   doc.setLineWidth(0.4).line(5, dynamicLength+10, 205, dynamicLength+10);
+  //   doc.setLineWidth(0.4).line(60, dynamicLength+1, 60, dynamicLength+14);
+
+  //   // Total Invoice amount in words:
+  //   doc.setFontSize(10.5).text(doc.splitTextToSize(`Total Invoice amount in words:`, (maxWidth - 70)), 7, dynamicLength +13.3);
+  //   doc.setFontSize(10.5).text(doc.splitTextToSize(`${formData?.totalAmountInWords}`, (maxWidth - 30)), 70, dynamicLength+13.3);
+
+
+  //   doc.setLineWidth(0.4).line(5, dynamicLength+14, 205, dynamicLength+14);
+  //   doc.setLineWidth(0.4).line(5, dynamicLength+15, 205, dynamicLength+15);
+  //   doc.setLineWidth(0.4).line(130, dynamicLength+15, 130, dynamicLength+21);
+  //   // SUD Group Hong Kong Company Limited Bank Details
+  //   doc.setFontSize(14).text(doc.splitTextToSize(`SUD Group Hong Kong Company Limited Bank Details`, (maxWidth - 50)), 7, dynamicLength+20);
+  //   doc.setFontSize(11).text(doc.splitTextToSize(`Authorised signatory with Company Chop`, (maxWidth - 50)), 134, dynamicLength+20);
+
+
+  //   doc.setFontSize(12).text(doc.splitTextToSize(`Account Name: SUD Group Hong Kong Company Limited.`, (maxWidth - 50)), 7, dynamicLength+31);
+  //   doc.setFontSize(12).text(doc.splitTextToSize(`Account number: 582-634960-838`, (maxWidth - 50)), 7, dynamicLength+36);
+  //   doc.setFontSize(12).text(doc.splitTextToSize(`Beneficiary Bank name: HSBC (Hong Kong)`, (maxWidth - 50)), 7, dynamicLength+41);
+  //   doc.setFontSize(12).text(doc.splitTextToSize(`Beneficiary Bank Address: 1 Queen's Road Central, Hong Kong`, (maxWidth - 50)), 7, dynamicLength+46);
+  //   doc.setFontSize(12).text(doc.splitTextToSize(`Swift Address: HSBCHKHHHKH`, (maxWidth - 50)), 7, dynamicLength+51);
+
+  //   if (signBase64) {
+  //     doc.addImage(signBase64, "PNG", 137, dynamicLength+27, 55, 30);
+  //   }
+
+  //   doc.setLineWidth(0.4).line(5, dynamicLength+21, 205, dynamicLength+21);
+  //   doc.setLineWidth(0.4).line(5, dynamicLength+22, 205, dynamicLength+22);
+  //   doc.setLineWidth(0.4).line(130, dynamicLength+22, 130, dynamicLength+62);
+
