@@ -1,0 +1,8 @@
+{
+  "crons": [
+    {
+      "path": "/api/jobs/invoice-due-alert",
+      "schedule": "0 9 * * *"
+    }
+  ]
+}

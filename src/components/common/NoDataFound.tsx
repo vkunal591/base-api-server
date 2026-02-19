@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { debounce } from "@/hooks/general";
 import { FaFileUpload, FaFilter } from "react-icons/fa";
+import Link from "next/link";
 
 interface NoDataFoundProps {
   type: string;
@@ -49,15 +50,22 @@ const NoDataFound: React.FC<NoDataFoundProps> = ({
         </button>
 
         {/* Add Button */}
-        {operationsAllowed?.create && (
-          <button
+        {operationsAllowed?.create && (type==="Invoice"?
+         ( <Link
+            href={"/dashboard/orders/create-invoice"}
+            className="bg-secondary text-white px-4 py-2.5 h-10 rounded-xl"
+          >
+            Add {type}
+            <sup>+</sup>
+          </Link>):
+       (<button
             type="button"
             onClick={handleAdd}
-            className="bg-primary text-white px-4 h-fit py-2 rounded-md"
+            className="bg-secondary text-white px-4 py-1 h-10 rounded-xl"
           >
-            Add&nbsp;{type}
+            Add {type}
             <sup>+</sup>
-          </button>
+          </button>)
         )}
 
         {/* Upload Button */}

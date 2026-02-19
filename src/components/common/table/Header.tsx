@@ -25,6 +25,7 @@ const Header: React.FC<HeaderProps> = ({
   operationsAllowed,
   handleCSVUpload,
 }) => {
+  console.log(operationsAllowed.create,"ddd")
   return (
     <div className="flex bg-whiteBg p-5 rounded-2xl justify-between items-center">
       {/* Title */}

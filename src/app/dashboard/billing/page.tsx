@@ -53,7 +53,7 @@ const Users: React.FC = () => {
 
   const { user } = useAuth();
   const operationsAllowed = getAccessPoints(user, "Manage Invoice");
-
+console.log(operationsAllowed)
   if (loading && !updatedData && !error) return <Loader />;
 
   return (

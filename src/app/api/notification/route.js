@@ -5,30 +5,48 @@ import NotificationModel from "../../lib/models/NotificationModel";
 import CompanyModel from "../../lib/models/CompanyModel";
 import nodemailer from "nodemailer";
 
-async function sendEmailAlert(companyEmail, alertMessage) {
-  const transporter = nodemailer.createTransport({
-    service: "gmail",
-    auth: {
-      user: process.env.EMAIL_USER,
-      pass: process.env.EMAIL_PASS,
-    },
-  });
+/**
+ * Create reusable transporter (AliMail SMTP)
+ */
+const transporter = nodemailer.createTransport({
+  host: process.env.MAIL_HOST,
+  port: Number(process.env.MAIL_PORT),
+  secure: process.env.MAIL_SECURE === "true", // true for 465
+  auth: {
+    user: process.env.MAIL_USER,
+    pass: process.env.MAIL_PASS,
+  },
+});
 
-  return transporter.sendMail({
-    from: process.env.EMAIL_USER,
-    to: companyEmail,
-    subject: "Invoice Due Date Alert",
-    text: alertMessage,
-  });
+/**
+ * Send Email Function
+ */
+export async function sendEmailAlert(companyEmail, alertMessage) {
+  try {
+    const info = await transporter.sendMail({
+      from: `"${process.env.MAIL_FROM_NAME}" <${process.env.MAIL_FROM_ADDRESS}>`,
+      to: companyEmail,
+      subject: "Invoice Due Date Alert",
+      text: alertMessage,
+    });
+
+    console.log("Email sent:", info.response);
+    return true;
+  } catch (error) {
+    console.error("Email error:", error);
+    return false;
+  }
 }
 
-export async function POST(req) {
+/**
+ * POST API
+ */
+export async function POST() {
   await dbConnect();
 
   try {
     const notifications = await NotificationModel.find({ isEnabled: true });
-
-    const now = new Date(); 
+    const now = new Date();
 
     for (const notification of notifications) {
       const invoices = await InvoiceModel.find({
@@ -40,34 +58,50 @@ export async function POST(req) {
 
       for (const invoice of invoices) {
         const daysBeforeDue = Math.ceil(
-          (invoice.dueDate - now) / (1000 * 60 * 60 * 24)
+          (new Date(invoice.dueDate) - now) / (1000 * 60 * 60 * 24)
         );
 
         if (
-          daysBeforeDue === notification.daysBeforeDue && 
+          daysBeforeDue === notification.daysBeforeDue &&
           daysBeforeDue >= 0
         ) {
           const company = await CompanyModel.findById(notification.company);
 
-          await sendEmailAlert(company.email, notification.alertMessage);
+          if (!company?.email) continue;
 
-          //  PREVENT DUPLICATE EMAILS
-          await InvoiceModel.findByIdAndUpdate(invoice._id, {
-            reminderSent: true,
-          });
+          const emailSent = await sendEmailAlert(
+            company.email,
+            notification.alertMessage
+          );
 
-          await NotificationModel.findByIdAndUpdate(notification._id, {
-            $push: { notificationsSent: { status: "Sent", date: new Date() } },
-          });
+          if (emailSent) {
+            // Prevent duplicate emails
+            await InvoiceModel.findByIdAndUpdate(invoice._id, {
+              reminderSent: true,
+            });
+
+            await NotificationModel.findByIdAndUpdate(notification._id, {
+              $push: {
+                notificationsSent: {
+                  status: "Sent",
+                  date: new Date(),
+                },
+              },
+            });
+          }
         }
       }
     }
 
-    return NextResponse.json({ message: "Notifications sent successfully" });
+    return NextResponse.json({
+      success: true,
+      message: "Notifications processed successfully",
+    });
   } catch (error) {
-    console.error(error);
+    console.error("Server Error:", error);
+
     return NextResponse.json(
-      { message: "Error sending notifications" },
+      { success: false, message: "Error sending notifications" },
       { status: 500 }
     );
   }

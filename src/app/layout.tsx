@@ -5,6 +5,7 @@ import localFont from "next/font/local";
 import Navbar from "@/components/Navbar";
 // import { Lato } from "next/font/google";
 import '../app/lib/config/invoiceReminderCron';
+import '../app/lib/config/cron';
 import Sidebar from "@/components/common/Sidebar";
 import { AuthProvider } from "@/context/AuthContext";
 
