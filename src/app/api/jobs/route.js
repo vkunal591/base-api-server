@@ -76,8 +76,8 @@ export async function GET() {
         return `
           <tr>
             <td style="padding:8px;border:1px solid #ddd;">${index + 1}</td>
-            <td style="padding:8px;border:1px solid #ddd;">${inv.invoiceNumber} (${inv.vesselImoNo})</td>
-            <td style="padding:8px;border:1px solid #ddd;">${inv.vesselName || "N/A"}</td>
+            <td style="padding:8px;border:1px solid #ddd;">${inv.invoiceNumber || "N/A"}</td>
+            <td style="padding:8px;border:1px solid #ddd;">${inv.vesselName} (${inv.vesselImoNo})</td>
             <td style="padding:8px;border:1px solid #ddd;">${dueDate}</td>
             <td style="padding:8px;border:1px solid #ddd;">₹${amount}</td>
             <td style="padding:8px;border:1px solid #ddd;">${inv.status}</td>
