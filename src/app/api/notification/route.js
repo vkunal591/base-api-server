@@ -5,38 +5,7 @@ import NotificationModel from "../../lib/models/NotificationModel";
 import CompanyModel from "../../lib/models/CompanyModel";
 import nodemailer from "nodemailer";
 
-/**
- * Create reusable transporter (AliMail SMTP)
- */
-const transporter = nodemailer.createTransport({
-  host: process.env.MAIL_HOST,
-  port: Number(process.env.MAIL_PORT),
-  secure: process.env.MAIL_SECURE === "true", // true for 465
-  auth: {
-    user: process.env.MAIL_USER,
-    pass: process.env.MAIL_PASS,
-  },
-});
 
-/**
- * Send Email Function
- */
-export async function sendEmailAlert(companyEmail, alertMessage) {
-  try {
-    const info = await transporter.sendMail({
-      from: `"${process.env.MAIL_FROM_NAME}" <${process.env.MAIL_FROM_ADDRESS}>`,
-      to: companyEmail,
-      subject: "Invoice Due Date Alert",
-      text: alertMessage,
-    });
-
-    console.log("Email sent:", info.response);
-    return true;
-  } catch (error) {
-    console.error("Email error:", error);
-    return false;
-  }
-}
 
 /**
  * POST API
