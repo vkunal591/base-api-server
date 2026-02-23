@@ -10,6 +10,7 @@ import React, {
   ReactNode,
   useEffect,
 } from "react";
+import { sendMail } from "@/app/lib/config/cron";
 
 interface AuthContextProps {
   user: any;
@@ -55,7 +56,6 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
           data: JSON.parse(userDetails),
           message: "User found",
         };
-
         if (response?.success && response?.data) {
           setLoading(false);
           setToken(adminToken);

@@ -9,19 +9,23 @@ import DarkLightToggle from "./DarkLightToggle";
 import { useAuth } from "../context/AuthContext";
 import FullScreenButton from "./FullScreenButton";
 import { HiOutlineMenuAlt1 } from "react-icons/hi";
+import { sendMail } from "@/app/lib/config/cron";
 
 const Navbar: React.FC = () => {
   const { token } = useAuth();
   const [stateReady, setStateReady] = useState(false);
   const [searchTerm, setSearchTerm] = useState<string>("");
 
+  
+  const sendMailToday =async () => {
+    // Implement your search logic here
+    await sendMail()
+    
+  };
   useEffect(() => {
     setStateReady(true);
+    sendMailToday();
   }, []);
-
-  const fetchFilteredData = () => {
-    // Implement your search logic here
-  };
 
   return (
     <>

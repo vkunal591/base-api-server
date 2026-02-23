@@ -1,15 +1,41 @@
-// app/api/send-due-invoices/route.js
-
 import { NextResponse } from "next/server";
 import { dbConnect } from "../../lib/config/db";
 import InvoiceModel from "../../lib/models/InvoiceModel";
+import UserModel from "../../lib/models/UserModel";
 import { sendEmailAlert } from "../../lib/config/nodemailer";
 
 export async function GET() {
   try {
     await dbConnect();
 
-    // ✅ Date Handling (Time Safe)
+    const user = await UserModel.findOne({ email: "sud@gmail.com" });
+
+    if (!user) {
+      return NextResponse.json(
+        { success: false, message: "User not found" },
+        { status: 404 }
+      );
+    }
+
+    // ✅ Check if already mailed today
+    const startOfToday = new Date();
+    startOfToday.setHours(0, 0, 0, 0);
+
+    const endOfToday = new Date();
+    endOfToday.setHours(23, 59, 59, 999);
+
+    if (
+      user.lastMailedAt &&
+      user.lastMailedAt >= startOfToday &&
+      user.lastMailedAt <= endOfToday
+    ) {
+      return NextResponse.json(
+        { success: true, message: "Mail already sent today" },
+        { status: 200 }
+      );
+    }
+
+    // ✅ Date Handling
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
@@ -17,7 +43,7 @@ export async function GET() {
     threeDaysLater.setDate(today.getDate() + 3);
     threeDaysLater.setHours(23, 59, 59, 999);
 
-    // ✅ Fetch Overdue + Next 3 Days
+    // ✅ Fetch invoices
     const invoices = await InvoiceModel.find({
       dueDate: { $lte: threeDaysLater },
       status: { $in: ["Unpaid", "Overdue", "Pending"] },
@@ -30,7 +56,7 @@ export async function GET() {
       );
     }
 
-    // ✅ Calculate Total Amount
+    // ✅ Calculate total amount
     const totalAmountSum = invoices.reduce(
       (acc, inv) => acc + (inv.totalAmount || 0),
       0
@@ -38,7 +64,7 @@ export async function GET() {
 
     const todayDate = new Date().toLocaleDateString();
 
-    // ✅ Build Table Rows
+    // ✅ Build table rows
     const tableRows = invoices
       .map((inv, index) => {
         const dueDate = inv.dueDate
@@ -50,7 +76,7 @@ export async function GET() {
         return `
           <tr>
             <td style="padding:8px;border:1px solid #ddd;">${index + 1}</td>
-            <td style="padding:8px;border:1px solid #ddd;">${inv.invoiceNumber}</td>
+            <td style="padding:8px;border:1px solid #ddd;">${inv.invoiceNumber} (${inv.vesselImoNo})</td>
             <td style="padding:8px;border:1px solid #ddd;">${inv.vesselName || "N/A"}</td>
             <td style="padding:8px;border:1px solid #ddd;">${dueDate}</td>
             <td style="padding:8px;border:1px solid #ddd;">₹${amount}</td>
@@ -97,7 +123,6 @@ export async function GET() {
       </div>
     `;
 
-    // ✅ Text Fallback
     const textMessage = `
 Invoice Due Summary (${todayDate})
 
@@ -109,9 +134,16 @@ Please check the HTML version for detailed breakdown.
 
     const subject = `Invoice Reminder - Due Within 3 Days (${todayDate})`;
 
-    // ✅ Send Static Email
+    // ✅ Multiple Recipients
+    const recipients = [
+      "sese@sudgroup.cn",
+      "rana@sudgroup.cn",
+      "biz1@sudgroup.cn"
+        ];
+
+    // Send to all emails (single send with multiple recipients)
     const emailSent = await sendEmailAlert(
-      "vkunal591@gmail.com",
+      recipients.join(","), // comma separated emails
       subject,
       textMessage,
       htmlMessage
@@ -119,15 +151,20 @@ Please check the HTML version for detailed breakdown.
 
     if (!emailSent) {
       return NextResponse.json(
-        { success: false, message: "Email sending failed.",emailSent },
+        { success: false, message: "Email sending failed." },
         { status: 500 }
       );
     }
+
+    // ✅ Update last mailed date
+    user.lastMailedAt = new Date();
+    await user.save();
 
     return NextResponse.json(
       { success: true, message: "Invoice reminder email sent successfully." },
       { status: 200 }
     );
+
   } catch (error) {
     console.error("Server Error:", error);
 

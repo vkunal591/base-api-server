@@ -37,6 +37,9 @@ const userSchema = new mongoose.Schema({
     type: Boolean,
     default: false, // Initially set to false until user verifies email
   },
+  lastMailedAt: {
+    type: Date
+  },
   createdAt: {
     type: Date,
     default: Date.now,
