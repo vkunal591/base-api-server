@@ -296,6 +296,9 @@ const payload = {
   companyName:formData.to,
   sudInvoiceToOwners:formData.totalAmount,
   dueDate:formData.dueDate,
+  yardName:formData.billingFrom.companyName,
+  arrival:formData.billingFrom.streetAddress,
+  departure:formData.billingFrom.landmark,
 }
 
 

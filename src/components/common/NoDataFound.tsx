@@ -39,7 +39,7 @@ const NoDataFound: React.FC<NoDataFoundProps> = ({
       </div>
 
       {/* Button Section */}
-      <div className="flex space-x-2">
+      <div className="flex space-x-2 ">
         {/* Clear Filters Button */}
         <button
           type="button"
@@ -61,7 +61,7 @@ const NoDataFound: React.FC<NoDataFoundProps> = ({
        (<button
             type="button"
             onClick={handleAdd}
-            className="bg-secondary text-white px-4 py-1 h-10 rounded-xl"
+            className="bg-secondary  text-white px-4 py-2 flex items-center justify-center gap-1 w-full h-fit rounded-md"
           >
             Add {type}
             <sup>+</sup>
