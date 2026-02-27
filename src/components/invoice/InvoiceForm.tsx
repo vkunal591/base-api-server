@@ -307,7 +307,7 @@ const payload = {
     try {
       setSubmitting(true);
             let url = "";
-            if (updateId) url = `/api/ships${updateId}`;
+            if (updateId) url = `/api/ships/${updateId}`;
             else url = `/api/ships`;
           const response = await fetch(url, {
             method: updateId?"PUT":"POST",
