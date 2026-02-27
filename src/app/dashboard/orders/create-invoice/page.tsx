@@ -25,7 +25,7 @@ const InvoicePage = () => {
           ]}
         />
 
-        <InvoiceForm responseData={data} updateId={null} />
+        <InvoiceForm responseData={data} updateId={null} isInvoiceMode={false} />
       </Wrapper>
     </AuthGuard>
   );

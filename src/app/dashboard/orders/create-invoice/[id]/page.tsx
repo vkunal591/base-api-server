@@ -20,7 +20,7 @@ const InvoicePage = () => {
 
   // Identify if it's invoice-based ID (INV-xxxx)
   const isInvoiceMode = rawId?.startsWith("INV-");
-
+console.log(rawId,isInvoiceMode)
   // Extract actual Mongo ID
   let id = rawId?.replace("INV-", "") || null;
 
@@ -53,7 +53,7 @@ const InvoicePage = () => {
 
         const res = await response.json();
         const { _id, ...rest } = res?.data?.result || {};
-
+console.log(rest,id)
         // Set response data
         setData(rest);
 
@@ -80,7 +80,7 @@ const InvoicePage = () => {
           ]}
         />
 
-        <InvoiceForm responseData={data} updateId={isInvoiceMode ?id:null} />
+        <InvoiceForm responseData={data} updateId={isInvoiceMode ?id:null}  isInvoiceMode={isInvoiceMode}/>
       </Wrapper>
     </AuthGuard>
   );

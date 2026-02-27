@@ -10,7 +10,7 @@ import dayjs from "dayjs";
 import mongoose from "mongoose";
 import { endpoints } from "@/data/endpoints";
 
-const InvoiceForm = ({ responseData,updateId }: any) => {
+const InvoiceForm = ({ responseData,updateId ,isInvoiceMode}: any) => {
   console.log(dayjs(responseData?.dueDate).format("YYYY-MM-DD"),updateId)
   const router = useRouter();
   const [submitting, setSubmitting] = useState(false);
@@ -307,7 +307,7 @@ const payload = {
     try {
       setSubmitting(true);
             let url = "";
-            if (updateId) url = `/api/ships/${updateId}`;
+            if (updateId || isInvoiceMode) url = `/api/ships/${isInvoiceMode?formData?.vesselImoNo:updateId}`;
             else url = `/api/ships`;
           const response = await fetch(url, {
             method: updateId?"PUT":"POST",
