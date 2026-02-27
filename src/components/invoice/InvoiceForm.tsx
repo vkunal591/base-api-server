@@ -518,6 +518,18 @@ const payload = {
                 </div>}
             </div>
           </div>
+
+          <div>
+            <h3 className="font-bold mb-2">Address:</h3>
+            <input
+              type="text"
+              placeholder="Street Address"
+              name="billingTo.streetAddress"
+              value={formData.billingTo.streetAddress}
+              onChange={handleChange}
+              className="w-full p-2 mb-2 border border-gray-300 rounded"
+            />
+          </div>
           <div>
             <h3 className="font-bold mb-2">Second Address:</h3>
             <input
@@ -525,18 +537,6 @@ const payload = {
               placeholder="Second Address"
               name="billingTo.secondStreetAddress"
               value={formData.billingTo.secondStreetAddress}
-              onChange={handleChange}
-              className="w-full p-2 mb-2 border border-gray-300 rounded"
-            />
-          </div>
-
-          <div>
-            <h3 className="font-bold mb-2">Billing To Address:</h3>
-            <input
-              type="text"
-              placeholder="Street Address"
-              name="billingTo.streetAddress"
-              value={formData.billingTo.streetAddress}
               onChange={handleChange}
               className="w-full p-2 mb-2 border border-gray-300 rounded"
             />
