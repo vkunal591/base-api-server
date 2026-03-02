@@ -37,8 +37,8 @@ const columns = [
   { key: "customize", label: "Customize", sortable: true },
   { key: "remarks", label: "Remarks", sortable: true },
 
-  { key: "createdAt", label: "Created At", sortable: true, isDate: true },
-  { key: "updatedAt", label: "Updated At", sortable: true, isDate: true },
+  // { key: "createdAt", label: "Created At", sortable: true, isDate: true },
+  // { key: "updatedAt", label: "Updated At", sortable: true, isDate: true },
 ];
 
 const filterOptions = [

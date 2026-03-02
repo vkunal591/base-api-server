@@ -24,16 +24,16 @@ export async function GET() {
     const endOfToday = new Date();
     endOfToday.setHours(23, 59, 59, 999);
 
-    if (
-      user.lastMailedAt &&
-      user.lastMailedAt >= startOfToday &&
-      user.lastMailedAt <= endOfToday
-    ) {
-      return NextResponse.json(
-        { success: true, message: "Mail already sent today" },
-        { status: 200 }
-      );
-    }
+    // if (
+    //   user.lastMailedAt &&
+    //   user.lastMailedAt >= startOfToday &&
+    //   user.lastMailedAt <= endOfToday
+    // ) {
+    //   return NextResponse.json(
+    //     { success: true, message: "Mail already sent today" },
+    //     { status: 200 }
+    //   );
+    // }
 
     // ✅ Date Handling
     const today = new Date();
@@ -78,8 +78,9 @@ export async function GET() {
             <td style="padding:8px;border:1px solid #ddd;">${index + 1}</td>
             <td style="padding:8px;border:1px solid #ddd;">${inv.invoiceNumber || "N/A"}</td>
             <td style="padding:8px;border:1px solid #ddd;">${inv.vesselName} (${inv.vesselImoNo})</td>
+            <td style="padding:8px;border:1px solid #ddd;">${inv.to} </td>
             <td style="padding:8px;border:1px solid #ddd;">${dueDate}</td>
-            <td style="padding:8px;border:1px solid #ddd;">₹${amount}</td>
+            <td style="padding:8px;border:1px solid #ddd;">$${amount}</td>
             <td style="padding:8px;border:1px solid #ddd;">${inv.status}</td>
           </tr>
         `;
@@ -98,6 +99,7 @@ export async function GET() {
             <tr style="background-color: #f2f2f2;">
               <th style="padding:8px;border:1px solid #ddd;">#</th>
               <th style="padding:8px;border:1px solid #ddd;">Invoice No</th>
+              <th style="padding:8px;border:1px solid #ddd;">Vessel Name/IMO</th>
               <th style="padding:8px;border:1px solid #ddd;">Company</th>
               <th style="padding:8px;border:1px solid #ddd;">Due Date</th>
               <th style="padding:8px;border:1px solid #ddd;">Amount</th>
@@ -113,13 +115,7 @@ export async function GET() {
           Total Due Amount: ₹${totalAmountSum.toFixed(2)}
         </h3>
 
-        <p style="margin-top:20px;">
-          Kindly ensure timely payment to avoid service interruption.
-        </p>
 
-        <p style="margin-top:30px;font-size:12px;color:#777;">
-          This is an automated system generated email.
-        </p>
       </div>
     `;
 
@@ -127,7 +123,7 @@ export async function GET() {
 Invoice Due Summary (${todayDate})
 
 Total Invoices: ${invoices.length}
-Total Amount: ₹${totalAmountSum.toFixed(2)}
+Total Amount: $${totalAmountSum.toFixed(2)}
 
 Please check the HTML version for detailed breakdown.
 `;
@@ -139,7 +135,7 @@ Please check the HTML version for detailed breakdown.
       "sese@sudgroup.cn",
       "rana@sudgroup.cn",
       "biz1@sudgroup.cn"
-        ];
+    ];
 
     // Send to all emails (single send with multiple recipients)
     const emailSent = await sendEmailAlert(
