@@ -24,16 +24,16 @@ export async function GET() {
     const endOfToday = new Date();
     endOfToday.setHours(23, 59, 59, 999);
 
-    // if (
-    //   user.lastMailedAt &&
-    //   user.lastMailedAt >= startOfToday &&
-    //   user.lastMailedAt <= endOfToday
-    // ) {
-    //   return NextResponse.json(
-    //     { success: true, message: "Mail already sent today" },
-    //     { status: 200 }
-    //   );
-    // }
+    if (
+      user.lastMailedAt &&
+      user.lastMailedAt >= startOfToday &&
+      user.lastMailedAt <= endOfToday
+    ) {
+      return NextResponse.json(
+        { success: true, message: "Mail already sent today" },
+        { status: 200 }
+      );
+    }
 
     // ✅ Date Handling
     const today = new Date();
