@@ -112,7 +112,7 @@ export async function GET() {
         </table>
 
         <h3 style="margin-top:20px;">
-          Total Due Amount: ₹${totalAmountSum.toFixed(2)}
+          Total Due Amount: $${totalAmountSum.toFixed(2)}
         </h3>
 
 
