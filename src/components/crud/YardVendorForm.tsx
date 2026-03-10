@@ -77,7 +77,7 @@ const YardVendorForm: React.FC<LedgerProps> = (props: any) => {
       // ]);
       const response: any = data?._id
         ? await Put(url, updatedData)
-        : await Post(`http://localhost:3000/${url}`, updatedData);
+        : await Post(`https://sud-group-dock.vercel.app/${url}`, updatedData);
 
       if (response.success) {
         const fetchUrl = `${endpoints[formType].fetchAll}`;

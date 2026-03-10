@@ -5,7 +5,7 @@ import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 // const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 const api = axios.create({
-  baseURL: "http://localhost:3000",
+  baseURL: "https://sud-group-dock.vercel.app",
   timeout: 10000, // Default timeout in milliseconds
 });
 

@@ -192,7 +192,7 @@ const TableComponent = <T extends { [key: string]: any }>({
     if (fetchEndpoint) {
       try {
         const response: any = await Fetch(
-          `http://localhost:3000/${fetchEndpoint}`,
+          `https://sud-group-dock.vercel.app/${fetchEndpoint}`,
           operationsAllowed?.custome
             ? path === "/dashboard/notifications"
               ? notificationParams

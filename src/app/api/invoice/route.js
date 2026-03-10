@@ -6,7 +6,7 @@
 //   await dbConnect();
 
 //   // Use a base URL if req.url is relative
-//   const url = new URL(req.url, process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000");
+//   const url = new URL(req.url, process.env.NEXT_PUBLIC_BASE_URL || "https://sud-group-dock.vercel.app");
 //   const searchParams = url.searchParams;
 
 //   // Get pagination values
@@ -168,7 +168,7 @@ export async function GET(req) {
 
   const url = new URL(
     req.url,
-    process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"
+    process.env.NEXT_PUBLIC_BASE_URL || "https://sud-group-dock.vercel.app"
   );
 
   const searchParams = url.searchParams;

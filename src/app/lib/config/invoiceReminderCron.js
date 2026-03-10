@@ -5,7 +5,7 @@ cron.schedule("0 9 * * *", async () => {
   try {
     console.log("Invoice Reminder Cron Running");
 
-    await fetch("http://localhost:3000/api/notification", {
+    await fetch("https://sud-group-dock.vercel.app/api/notification", {
       method: "POST",
     });
   } catch (error) {

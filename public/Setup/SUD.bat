@@ -18,7 +18,7 @@ start "Next.js Server" /min cmd /c "npm run start"
 timeout /t 10 /nobreak >nul
 
 :: === Set your local URL ===
-SET "URL=http://localhost:3000"
+SET "URL=https://sud-group-dock.vercel.app"
 
 :: === Try to find Microsoft Edge path ===
 SET "EDGE_PATH="
