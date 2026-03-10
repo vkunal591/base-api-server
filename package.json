@@ -20,7 +20,7 @@
     "jspdf": "^3.0.0",
     "mongoose": "^8.10.1",
     "multer": "^2.0.2",
-    "next": "^15.1.7",
+    "next": "^15.3.6",
     "next-connect": "^1.0.0",
     "node-cron": "^3.0.3",
     "nodemailer": "^6.10.0",
