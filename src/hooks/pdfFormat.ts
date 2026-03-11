@@ -293,6 +293,8 @@ PARTIES.`, maxWidth), 20, 128) : "";
         currentY + 28
       );
       doc.text("Swift Address : HSBCHKHHHKH", 22, currentY + 33);
+    doc.setFontSize(9).text(`**If any usual request to change our bank account details, please call +852-94329812 or +86-13666710303`, 22, currentY+43);
+
       doc.line(20, currentY + 38, 190, currentY + 38);
       doc.line(190, currentY + 7, 190, currentY + 38);
     }
@@ -509,7 +511,8 @@ console.log(dynamicLength)
     doc.setFontSize(12).text(doc.splitTextToSize(`Beneficiary Bank name: HSBC (Hong Kong)`, (maxWidth - 50)), 7, 259);
     doc.setFontSize(12).text(doc.splitTextToSize(`Beneficiary Bank Address: 1 Queen's Road Central, Hong Kong`, (maxWidth - 50)), 7, 264);
     doc.setFontSize(12).text(doc.splitTextToSize(`Swift Address: HSBCHKHHHKH`, (maxWidth - 50)), 7, 269);
-
+    
+    // doc.setFontSize(9).text(`**If any usual request to change our bank account details, please call +852-94329812 or +86-13666710303`, 22, 277);
     if (signBase64) {
       doc.addImage(signBase64, "PNG", 137, 245, 55, 30);
     }
