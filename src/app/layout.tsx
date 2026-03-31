@@ -21,6 +21,8 @@ const geistMono = localFont({
 
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css"; // Import Toastify styles
+import { FaLock } from "react-icons/fa";
+import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "SUD",
@@ -46,7 +48,30 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} relative antialiased`}
       >
-        <AuthProvider>
+        <div className="flex flex-col items-center justify-center h-screen bg-white rounded-2xl">
+          <div className="max-w-2xl text-center">
+            <div className="flex items-center justify-center mb-6">
+              <FaLock className="text-red-500 text-7xl" />
+            </div>
+            <h1 className="text-3xl md:text-6xl font-bold text-gray-800 mb-4">
+              Plan Expire 
+            </h1>
+            <p className="text-lg md:text-xl text-gray-600 mb-8">
+              You don&apos;t have the required permissions. If you believe this
+              is a mistake, please contact your administrator.
+            </p>
+            <div className="flex flex-wrap justify-center gap-4">
+              <Link
+                href={""}
+                className="px-6 py-3 bg-red-500 text-white rounded-lg text-xl hover:bg-red-600 transition"
+              >
+                Contact Support
+              </Link>
+            </div>
+          </div>
+        </div>
+
+        {/* <AuthProvider>
           <div className="flex">
             <Sidebar />
             <div className="flex-1 w-[83%] border-l border-secondary">
@@ -62,7 +87,7 @@ export default function RootLayout({
               />
             </div>
           </div>
-        </AuthProvider>
+        </AuthProvider> */}
       </body>
     </html>
   );
