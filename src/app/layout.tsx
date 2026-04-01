@@ -48,7 +48,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} relative antialiased`}
       >
-        <div className="flex flex-col items-center justify-center h-screen bg-white rounded-2xl">
+        {/* <div className="flex flex-col items-center justify-center h-screen bg-white rounded-2xl">
           <div className="max-w-2xl text-center">
             <div className="flex items-center justify-center mb-6">
               <FaLock className="text-red-500 text-7xl" />
@@ -69,9 +69,9 @@ export default function RootLayout({
               </Link>
             </div>
           </div>
-        </div>
+        </div> */}
 
-        {/* <AuthProvider>
+        <AuthProvider>
           <div className="flex">
             <Sidebar />
             <div className="flex-1 w-[83%] border-l border-secondary">
@@ -87,7 +87,7 @@ export default function RootLayout({
               />
             </div>
           </div>
-        </AuthProvider> */}
+        </AuthProvider>
       </body>
     </html>
   );
